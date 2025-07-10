@@ -4,12 +4,16 @@ import me.teakivy.teakstweaks.TeaksTweaks;
 import me.teakivy.teakstweaks.commands.*;
 import me.teakivy.teakstweaks.packs.BasePack;
 import me.teakivy.teakstweaks.packs.alwaysdrop.AlwaysDrop;
+import me.teakivy.teakstweaks.packs.alwaysactivebeacons.AlwaysActiveBeacons;
 import me.teakivy.teakstweaks.packs.chunkloaders.Loader;
 import me.teakivy.teakstweaks.packs.collectiblebuddingamethyst.CollectibleBuddingAmethyst;
 import me.teakivy.teakstweaks.packs.confetticreepers.ConfettiCreeper;
+import me.teakivy.teakstweaks.packs.disposal.Disposal;
 import me.teakivy.teakstweaks.packs.elevators.Elevator;
 import me.teakivy.teakstweaks.packs.huskdropssand.HuskDropsSand;
 import me.teakivy.teakstweaks.packs.miniblocks.MiniBlocks;
+import me.teakivy.teakstweaks.packs.musicdiscengraver.MusicDiscEngraver;
+import me.teakivy.teakstweaks.packs.paintingpicker.PaintingPicker;
 import me.teakivy.teakstweaks.packs.sawmill.Sawmill;
 import me.teakivy.teakstweaks.packs.wanderingtraderannouncements.WanderingTraderAnnouncements;
 import me.teakivy.teakstweaks.packs.xpmanagement.XPManagement;
@@ -146,7 +150,11 @@ public class Register {
             new CollectibleBuddingAmethyst(),
             new MiniBlocks(),
             new WanderingTraderAnnouncements(),
-            new Sawmill()
+            new Sawmill(),
+            new PaintingPicker(),
+            new Disposal(),
+            new AlwaysActiveBeacons(),
+            new MusicDiscEngraver()
         ).collect(Collectors.toMap(BasePack::getPath, x -> x));
 
     }
@@ -244,6 +252,7 @@ public class Register {
             new DeleteHomeCommand(),
             new AltsCommand(),
             new TPAHereCommand(),
+            new DisposalCommand(),
         };
 
         for (AbstractCommand cmd : cmds) {

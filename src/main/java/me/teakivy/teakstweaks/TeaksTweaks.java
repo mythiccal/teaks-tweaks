@@ -13,7 +13,7 @@ import me.teakivy.teakstweaks.utils.permission.PermissionManager;
 import me.teakivy.teakstweaks.utils.recipe.RecipeManager;
 import me.teakivy.teakstweaks.utils.update.UpdateChecker;
 import me.teakivy.teakstweaks.utils.update.UpdateJoinAlert;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import me.teakivy.teakstweaks.utils.update.VersionManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -30,28 +30,17 @@ import static me.teakivy.teakstweaks.utils.metrics.CustomMetrics.registerCustomM
 public final class TeaksTweaks extends JavaPlugin implements Listener {
     private final ArrayList<String> activePacks = new ArrayList<>();
     private final ArrayList<String> activeCraftingTweaks = new ArrayList<>();
-    private BukkitAudiences adventure;
 
     private Register register;
 
-
-    public BukkitAudiences adventure() {
-        if(this.adventure == null) {
-            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
-        }
-        return this.adventure;
-    }
-
-    public static BukkitAudiences getAdventure() {
-        return getInstance().adventure();
-    }
     /**
      * Called when the plugin is enabled
      */
     @Override
     public void onEnable() {
+
+        VersionManager.init();
         // Initialize an audiences instance for the plugin
-        this.adventure = BukkitAudiences.create(this);
         // Credits
         createCredits();
 
@@ -66,7 +55,12 @@ public final class TeaksTweaks extends JavaPlugin implements Listener {
         Translatable.init(getConfig().getString("settings.language"));
 
         // Update Checker
-        getServer().getPluginManager().registerEvents(new UpdateJoinAlert(), this);
+        if (Config.getBoolean("settings.disable-update-checker")) {
+            Logger.info(Translatable.get("startup.update.disabled"));
+        } else {
+            getServer().getPluginManager().registerEvents(new UpdateJoinAlert(), this);
+        }
+
         getServer().getPluginManager().registerEvents(new GUIListener(), this);
         getServer().getPluginManager().registerEvents(new RecipeManager(), this);
 
@@ -109,10 +103,6 @@ public final class TeaksTweaks extends JavaPlugin implements Listener {
     public void onDisable() {
         // Plugin shutdown logic
         Logger.info(Translatable.get("startup.plugin.shutting_down"));
-        if(this.adventure != null) {
-            this.adventure.close();
-            this.adventure = null;
-        }
     }
 
     /**

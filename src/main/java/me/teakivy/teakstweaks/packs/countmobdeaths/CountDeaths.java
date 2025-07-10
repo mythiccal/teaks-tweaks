@@ -1,8 +1,6 @@
 package me.teakivy.teakstweaks.packs.countmobdeaths;
 
 import me.teakivy.teakstweaks.packs.BasePack;
-import me.teakivy.teakstweaks.packs.PackType;
-import me.teakivy.teakstweaks.utils.MM;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -17,7 +15,7 @@ import java.util.Objects;
 public class CountDeaths extends BasePack {
 
     public CountDeaths() {
-        super("count-mob-deaths", PackType.MOBS, Material.ECHO_SHARD);
+        super("count-mob-deaths", Material.ECHO_SHARD);
     }
 
     Objective objective;
@@ -29,7 +27,7 @@ public class CountDeaths extends BasePack {
         if (objective == null) {
             Scoreboard board = Objects.requireNonNull(Bukkit.getScoreboardManager()).getMainScoreboard();
             if (board.getObjective("mobDeathCount") == null) {
-                board.registerNewObjective("mobDeathCount", Criteria.DUMMY, MM.toString(getText("objective_name")));
+                board.registerNewObjective("mobDeathCount", Criteria.DUMMY, getText("objective_name"));
             }
             objective = board.getObjective("mobDeathCount");
         }

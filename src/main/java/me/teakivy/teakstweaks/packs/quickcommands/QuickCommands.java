@@ -1,7 +1,6 @@
 package me.teakivy.teakstweaks.packs.quickcommands;
 
 import me.teakivy.teakstweaks.packs.BasePack;
-import me.teakivy.teakstweaks.packs.PackType;
 import org.bukkit.Material;
 
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.List;
 public class QuickCommands extends BasePack {
 
     public QuickCommands() {
-        super("quick-commands", PackType.TEAKSTWEAKS, Material.COMMAND_BLOCK);
+        super("quick-commands", Material.COMMAND_BLOCK);
     }
 
     @Override
@@ -45,6 +44,26 @@ public class QuickCommands extends BasePack {
 
         if (getConfig().getBoolean("craftingtable")) {
             new CraftingTableQuickCommand().register();
+        }
+
+        if (getConfig().getBoolean("anvil")) {
+            new AnvilQuickCommand().register();
+        }
+
+        if (getConfig().getBoolean("cartographytable")) {
+            new CartographyTableQuickCommand().register();
+        }
+
+        if (getConfig().getBoolean("grindstone")) {
+            new GrindstoneQuickCommand().register();
+        }
+
+        if (getConfig().getBoolean("loom")) {
+            new LoomQuickCommand().register();
+        }
+
+        if (getConfig().getBoolean("smithingtable")) {
+            new SmithingTableQuickCommand().register();
         }
     }
 }

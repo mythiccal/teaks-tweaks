@@ -2,7 +2,6 @@ package me.teakivy.teakstweaks.packs.moremobheads;
 
 import me.teakivy.teakstweaks.TeaksTweaks;
 import me.teakivy.teakstweaks.packs.BasePack;
-import me.teakivy.teakstweaks.packs.PackType;
 import me.teakivy.teakstweaks.packs.moremobheads.mobs.*;
 import me.teakivy.teakstweaks.utils.JsonManager;
 import me.teakivy.teakstweaks.utils.config.Config;
@@ -23,7 +22,7 @@ public class MobHeads extends BasePack {
     private static HashMap<String, Object> chances = new HashMap<>();
 
     public MobHeads() {
-        super("more-mob-heads", PackType.MOBS, Material.ZOMBIE_HEAD);
+        super("more-mob-heads", Material.ZOMBIE_HEAD);
     }
 
     @Override
@@ -64,6 +63,7 @@ public class MobHeads extends BasePack {
         new GlowSquidHead();
         new GoatHead();
         new GuardianHead();
+        new HappyGhastHead();
         new HoglinHead();
         new HorseHead();
         new HuskHead();
@@ -124,6 +124,9 @@ public class MobHeads extends BasePack {
             MMHDatapackCreator.addNormalAdvancement("skeleton_skull", "Skeleton Skull", Material.SKELETON_SKULL);
             MMHDatapackCreator.addNormalAdvancement("zombie_head", "Zombie Head", Material.ZOMBIE_HEAD);
         }
+
+        CreakingHead.init();
+        TeaksTweaks.getInstance().getServer().getPluginManager().registerEvents(new CreakingHead(), TeaksTweaks.getInstance());
 
         loadJson();
 

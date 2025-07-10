@@ -1,10 +1,12 @@
 package me.teakivy.teakstweaks.commands;
 
+import me.teakivy.teakstweaks.TeaksTweaks;
 import me.teakivy.teakstweaks.packs.back.Back;
 import me.teakivy.teakstweaks.utils.command.AbstractCommand;
 import me.teakivy.teakstweaks.utils.command.CommandType;
 import me.teakivy.teakstweaks.utils.command.PlayerCommandEvent;
 import me.teakivy.teakstweaks.utils.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class BackCommand extends AbstractCommand {
@@ -28,8 +30,25 @@ public class BackCommand extends AbstractCommand {
             return;
         }
 
-        Back.tpBack(player);
-        sendMessage("teleporting");
+        int teleportDelay = getPackConfig().getInt("teleport-delay");
+
+        if (teleportDelay <= 0) {
+            Back.tpBack(player);
+            sendMessage("teleporting");
+            return;
+        }
+        sendMessage("teleporting_delayed", insert("time", teleportDelay));
+        int x = player.getLocation().getBlockX();
+        int y = player.getLocation().getBlockY();
+        int z = player.getLocation().getBlockZ();
+        Bukkit.getScheduler().runTaskLater(TeaksTweaks.getInstance(), () -> {
+            if (x != player.getLocation().getBlockX() || y != player.getLocation().getBlockY() || z != player.getLocation().getBlockZ()) {
+                player.sendMessage(getError("teleport_moved"));
+                return;
+            }
+            Back.tpBack(player);
+            player.sendMessage(getText("teleporting"));
+        }, teleportDelay * 20L);
         setCooldown();
     }
 }

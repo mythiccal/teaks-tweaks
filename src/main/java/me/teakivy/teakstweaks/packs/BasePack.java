@@ -3,7 +3,6 @@ package me.teakivy.teakstweaks.packs;
 import me.teakivy.teakstweaks.TeaksTweaks;
 import me.teakivy.teakstweaks.utils.customitems.CustomItem;
 import me.teakivy.teakstweaks.utils.log.Logger;
-import me.teakivy.teakstweaks.utils.MM;
 import me.teakivy.teakstweaks.utils.config.Config;
 import me.teakivy.teakstweaks.utils.lang.Translatable;
 import me.teakivy.teakstweaks.utils.metrics.CustomMetrics;
@@ -30,20 +29,17 @@ public class BasePack implements Listener {
 	private final String name;
 	private final String path;
 	private final String translatableKey;
-	private final PackType packType;
 	private final ItemStack item;
 
 	/**
 	 * Set up the pack
 	 * @param path Config path
-	 * @param packType PackType
 	 * @param material Material for the item
 	 */
-	public BasePack(String path, PackType packType, Material material) {
+	public BasePack(String path, Material material) {
 		this.translatableKey = path.replaceAll("-", "_");
         this.name = Translatable.getString(this.translatableKey + ".name");
 		this.path = path;
-		this.packType = packType;
 
 		String[] description = Translatable.getString(this.translatableKey + ".description").split("<newline>");
 
@@ -62,32 +58,32 @@ public class BasePack implements Listener {
 			lore.add("<gray>" + newLine);
 			lore.add(" ");
 		}
-		if (!lore.isEmpty()) lore.remove(lore.size() - 1);
+		if (!lore.isEmpty()) lore.removeLast();
 
 		if (getConfig().getKeys(false).size() > 1) {
 			lore.add(" ");
-			lore.add(packType.getColor() + "Config");
+			lore.add("<gold>Config");
 		}
 
 		for (String key : getConfig().getKeys(false)) {
 			if (key.equals("enabled")) continue;
 			if (getConfig().get(key).toString().startsWith("MemorySection")) continue;
+			if (getConfig().isList(key) && getConfig().getList(key).size() > 3) {
+				lore.add("  <gray>" + transformKey(key) + ": <reset><gold><italic>[" + getConfig().getList(key).size() + " Items]");
+				continue;
+			}
 
-			lore.add("  <gray>" + transformKey(key) + ": <reset>" + packType.getColor() + getConfig().get(key));
+			lore.add("  <gray>" + transformKey(key) + ": <reset><gold>" + getConfig().get(key));
 		}
 
-		lore.add(" ");
-
-		lore.add(packType.getColor() + packType.getName());
-
-		List<String> loreComponents = new ArrayList<>();
+		List<Component> loreComponents = new ArrayList<>();
 		for (String line : lore) {
-			loreComponents.add(MM.toString(MiniMessage.miniMessage().deserialize("<reset>" + line).decoration(TextDecoration.ITALIC, false)));
+			loreComponents.add(MiniMessage.miniMessage().deserialize("<reset>" + line).decoration(TextDecoration.ITALIC, false));
 		}
 
 		ItemMeta meta = item.getItemMeta();
-		meta.setLore(loreComponents);
-		meta.setDisplayName(MM.toString(MiniMessage.miniMessage().deserialize(packType.getColor() + name).decoration(TextDecoration.ITALIC, false)));
+		meta.lore(loreComponents);
+		meta.displayName(MiniMessage.miniMessage().deserialize("<gold>" + name).decoration(TextDecoration.ITALIC, false));
 		item.setItemMeta(meta);
     }
 
@@ -105,7 +101,7 @@ public class BasePack implements Listener {
 		}
 
 		getPlugin().addPack(name);
-		Logger.info(Translatable.get("startup.register.pack", insert("name", packType.getColor() + name)));
+		Logger.info(Translatable.get("startup.register.pack", insert("name", "<gold>" + name)));
 
 		CustomMetrics.addPackEnabled(name);
 	}

@@ -2,10 +2,7 @@ package me.teakivy.teakstweaks.packs.keepsmall;
 
 import me.teakivy.teakstweaks.TeaksTweaks;
 import me.teakivy.teakstweaks.packs.BasePack;
-import me.teakivy.teakstweaks.packs.PackType;
-import me.teakivy.teakstweaks.utils.MM;
 import me.teakivy.teakstweaks.utils.permission.Permission;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -19,7 +16,7 @@ import java.util.UUID;
 public class KeepSmall extends BasePack {
 
     public KeepSmall() {
-        super("keep-small", PackType.TEAKSTWEAKS, Material.STONE_BUTTON);
+        super("keep-small", Material.STONE_BUTTON);
     }
 
     @EventHandler
@@ -39,7 +36,7 @@ public class KeepSmall extends BasePack {
                     if (entity1 instanceof Ageable ageable) {
                         ageable.setAge(-Integer.MAX_VALUE);
                     }
-                    entity.setCustomName(MM.toString(getText("smallify.small_name")));
+                    entity.customName(getText("smallify.small_name"));
                 }
                 if (entity1.getCustomName().replaceAll("_", " ")
                         .replaceAll("-", " ")
@@ -49,7 +46,7 @@ public class KeepSmall extends BasePack {
                     if (entity1 instanceof Ageable ageable) {
                         ageable.setAge(1);
                     }
-                    entity.setCustomName(MM.toString(getText("grow.grown_name")));
+                    entity.customName(getText("grow.grown_name"));
                 }
             }, 10L);
         } catch (NoClassDefFoundError ignored) {}

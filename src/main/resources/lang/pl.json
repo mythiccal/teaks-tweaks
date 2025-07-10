@@ -191,11 +191,14 @@
     "graves.key.item_lore": "Kliknij prawym przyciskiem na dowolny grób tym kluczem, aby go otworzyć.",
     "graves.log.created": "Utworzono grób dla <player> na XYZ: <x> <y> <z> w Świat: <world>",
     "graves.log.contains": "Zawiera <gold><item_count></gold> przedmiotów i <gold><xp_count></gold> XP.",
-    "graves.log.item": "- <gold><item> <white>x <gold><amount>",
+    "graves.log.item": "- <gold><item> <white>x <gold><amount><enchantments>",
   
     "nether_portal_coords.name": "Współrzędne Portalu Netheru",
     "nether_portal_coords.description": "Dodaje komendę, która oblicza, gdzie należy umieścić portal do Netheru w drugim wymiarze. Przydatne do synchronizacji portali do Netheru.<newline>Komenda: /portal",
-  
+
+    "painting_picker.name": "Wybierak Obrazów",
+    "painting_picker.description": "Użyj kamieniarza, aby wybrać wariant obrazu.",
+
     "real_time_clock.name": "Zegar Czasu Rzeczywistego",
     "real_time_clock.description": "Dodaje komendę, która pozwala zobaczyć, ile czasu świat działa w rzeczywistych minutach i godzinach.<newline>Komenda: /rtc",
   
@@ -252,6 +255,11 @@
     "quick_commands.fly.command_description": "Przełącz latanie.",
     "quick_commands.enderchest.command_description": "Otwórz swoją Skrzynię Kresu.",
     "quick_commands.craftingtable.command_description": "Otwórz stół rzemieślniczy.",
+    "quick_commands.anvil.command_description": "Otwórz Kowadło.",
+    "quick_commands.cartographytable.command_description": "Otwórz Stół Kartograficzny.",
+    "quick_commands.grindstone.command_description": "Otwórz Szlifierkę.",
+    "quick_commands.loom.command_description": "Otwórz Krosno.",
+    "quick_commands.smithingtable.command_description": "Otwórz Stół Kowalski.",
   
     "slime_cream.name": "Krem Slime",
     "slime_cream.description": "Zamień kulki slime na krem magmowy, klikając prawym przyciskiem myszy na kocioł z lawą.<newline>Zamień krem magmowy na kulki slime, klikając prawym przyciskiem na kocioł z wodą.",
@@ -324,7 +332,10 @@
   
     "charcoal_to_black_dye.name": "Charcoal na Black Dye",
     "charcoal_to_black_dye.description": "Pozwala przerabiać węgiel drzewny na czarny barwnik.",
-  
+
+    "cheaper_resin_blocks.name": "Tańsze Bloki Żywicy",
+    "cheaper_resin_blocks.description": "Pozwala wytwarzać bloki żywicy za pomocą 4 grudek żywicy zamiast 9.",
+
     "coal_to_black_dye.name": "Coal na Black Dye",
     "coal_to_black_dye.description": "Pozwala przerabiać węgiel na czarny barwnik.",
   
@@ -457,6 +468,8 @@
     "back.error.on_cooldown": "<red>Musisz poczekać <cooldown_seconds> sekund przed kolejnym użyciem /back!",
     "back.error.no_back_location": "<red>Nie masz dokąd wrócić!",
     "back.error.moved": "<red>Musisz stać nieruchomo, aby się teleportować!",
+    "back.error.teleport_moved": "<red>Musisz stać nieruchomo, aby się teleportować!",
+    "back.teleporting_delayed": "<yellow>Teleportacja za <time> sekund...",
     "back.teleporting": "<yellow>Teleportowanie z powrotem...",
   
     "conduitpower.command_description": "Przełącza Conduit Power w trybie spectatora.",
@@ -539,6 +552,8 @@
   
     "spawn.command_description": "Teleportuj się na spawn serwera.",
     "spawn.error.on_cooldown": "<red>Musisz poczekać <time> sekund przed kolejnym użyciem /spawn!",
+    "spawn.error.teleport_moved": "<red>Musisz stać nieruchomo, aby się teleportować!",
+    "spawn.teleporting_delayed": "<yellow>Teleportacja za <time> sekund...",
     "spawn.error.moved": "<red>Musisz stać nieruchomo, aby się teleportować!",
     "spawn.teleporting": "<yellow>Teleportowanie na spawn...",
   
@@ -565,10 +580,11 @@
     "teakstweakscommand.info.config_generated": "Config wygenerowany: <green><config_generated>",
     "teakstweakscommand.info.dev_mode_enabled": "Tryb Dewelopera: <green>Włączony",
     "teakstweakscommand.info.support": "Serwer Pomocy: <green><discord>",
-    "teakstweakscommand.paste.uploading": "<gold>Przesyłanie do PasteBook...",
-    "teakstweakscommand.paste.success": "<yellow>Pomyślnie przesłano do PasteBook!<newline><click:copy_to_clipboard:'<url>'><gold>Kliknij tutaj</gold>, aby skopiować link do schowka.</click><newline><click:open_url:'<url>'><gold>Kliknij tutaj</gold>, aby otworzyć link w przeglądarce.</click>",
-    "teakstweakscommand.paste.error": "<red>Nie udało się przesłać do PasteBook!",
-    "teakstweakscommand.paste.error.cooldown": "<red>Teak's Tweaks Paste można użyć tylko raz na 30 minut!",
+    "teakstweakscommand.paste.uploading": "<gold>Przesyłanie do <service_name>...",
+    "teakstweakscommand.paste.success": "<yellow>Pomyślnie przesłano do <service_name>!<newline><click:copy_to_clipboard:'<url>'><gold>Kliknij tutaj</gold>, aby skopiować link do schowka.</click><newline><click:open_url:'<url>'><gold>Kliknij tutaj</gold>, aby otworzyć link w przeglądarce.</click>",
+    "teakstweakscommand.paste.success.console": "<yellow>Pomyślnie przesłano do <service_name>!<newline><gold><url></gold>",
+    "teakstweakscommand.paste.error": "<red>Nie udało się przesłać do <service_name>!",
+    "teakstweakscommand.paste.error.cooldown": "<red><service_name> można użyć tylko raz na 30 minut!",
     "teakstweakscommand.give.unknown_item": "<red>Nieznany przedmiot '<item>'.",
     "teakstweakscommand.give.error.amount.lt_1": "<red>Wartość całkowita nie może być mniejsza niż 1.",
     "teakstweakscommand.give.error.amount.gt_6400": "<red>Wartość całkowita nie może być większa niż 6400.",
@@ -603,5 +619,16 @@
     "workstationhighlight.error.radius_out_of_bounds": "<red>Promień musi mieścić się w zakresie od 1 do 16!",
     "workstationhighlight.error.no_workstations_found": "<red>W pobliżu nie znaleziono żadnych stanowisk pracy wieśniaków!",
     "workstationhighlight.error.no_job_site": "<red>Najbliższy wieśniak nie ma stanowiska pracy!",
-    "workstationhighlight.found": "<yellow>Stanowisko pracy znajduje się pod <gold>[XYZ]: <x> <y> <z>"
-  }
+    "workstationhighlight.found": "<yellow>Stanowisko pracy znajduje się pod <gold>[XYZ]: <x> <y> <z>",
+    "workstationhighlight.cleared": "<yellow>Wszystkie podświetlenia zostały usunięte.",
+
+    "disposal.name": "Utylizacja",
+    "disposal.description": "Pozwala graczom na utylizację przedmiotów.<newline>Komenda: /disposal",
+    "disposal.command_description": "Utylizuj przedmioty.",
+
+    "always_active_beacons.name": "Zawsze aktywne latarnie",
+    "always_active_beacons.description": "Pozwala latarniom zawsze dawać efekty, niezależnie od dostępu do nieba.",
+
+    "music_disc_engraver.name": "Grawer Płyt Muzycznych",
+    "music_disc_engraver.description": "Wytwórz pustą płytę muzyczną z 8 sztabek żelaza i diamentu.<newline>Graweruj płytę muzyczną w przecinarce kamienia."
+}

@@ -189,10 +189,13 @@
   "graves.key.item_lore": "Right-click any grave with this key to open it.",
   "graves.log.created": "Created a grave for <player> at XYZ: <x> <y> <z> in World: <world>",
   "graves.log.contains": "Contains <gold><item_count></gold> items and <gold><xp_count></gold> XP.",
-  "graves.log.item": "- <gold><item> <white>x <gold><amount>",
+  "graves.log.item": "- <gold><item> <white>x <gold><amount><enchantments>",
 
   "nether_portal_coords.name": "Nether Portal Coords",
   "nether_portal_coords.description": "Adds a command that calculates where a nether portal must be placed in the other dimension. Useful for syncing up nether portals.<newline>Command: /portal",
+
+  "painting_picker.name": "Painting Picker",
+  "painting_picker.description": "Use a stonecutter to choose a painting's variant.",
 
   "real_time_clock.name": "Real Time Clock",
   "real_time_clock.description": "Adds a command that allows you to view how long a world has been running in real time minutes and hours.<newline>Command: /rtc",
@@ -250,6 +253,11 @@
   "quick_commands.fly.command_description": "Toggle flight.",
   "quick_commands.enderchest.command_description": "Open your Ender Chest.",
   "quick_commands.craftingtable.command_description": "Open a Crafting Table.",
+  "quick_commands.anvil.command_description": "Open an Anvil.",
+  "quick_commands.cartographytable.command_description": "Open a Cartography Table.",
+  "quick_commands.grindstone.command_description": "Open a Grindstone.",
+  "quick_commands.loom.command_description": "Open a Loom.",
+  "quick_commands.smithingtable.command_description": "Open a Smithing Table.",
 
   "slime_cream.name": "Slime Cream",
   "slime_cream.description": "Convert Slime Balls to Magma Cream by right-clicking a lava cauldron.<newline>Convert Magma Cream to Slime Balls by right-clicking a water cauldron.",
@@ -322,6 +330,9 @@
 
   "charcoal_to_black_dye.name": "Charcoal to Black Dye",
   "charcoal_to_black_dye.description": "Allows you to craft Charcoal into Black Dye.",
+
+  "cheaper_resin_blocks.name": "Cheaper Resin Blocks",
+  "cheaper_resin_blocks.description": "Allows you to craft Resin Blocks using 4 Resin Clumps instead of 9.",
 
   "coal_to_black_dye.name": "Coal to Black Dye",
   "coal_to_black_dye.description": "Allows you to craft Coal into Black Dye.",
@@ -453,6 +464,8 @@
 
   "back.command_description": "Teleport back to your previous location.",
   "back.error.on_cooldown": "<red>You must wait <cooldown_seconds> seconds between uses of /back!",
+  "back.error.teleport_moved": "<red>You must stand still to teleport!",
+  "back.teleporting_delayed": "<yellow>Teleporting in <time> seconds...",
   "back.error.no_back_location": "<red>You have nowhere to go back to!",
   "back.error.moved": "<red>You must stand still to teleport!",
   "back.teleporting": "<yellow>Teleporting Back...",
@@ -537,6 +550,8 @@
 
   "spawn.command_description": "Teleport to the server spawn.",
   "spawn.error.on_cooldown": "<red>You must wait <time> seconds between uses of /spawn!",
+  "spawn.error.teleport_moved": "<red>You must stand still to teleport!",
+  "spawn.teleporting_delayed": "<yellow>Teleporting in <time> seconds...",
   "spawn.error.moved": "<red>You must stand still to teleport!",
   "spawn.teleporting": "<yellow>Teleporting to Spawn...",
 
@@ -563,10 +578,11 @@
   "teakstweakscommand.info.config_generated": "Config Generated: <green><config_generated>",
   "teakstweakscommand.info.dev_mode_enabled": "Dev Mode: <green>Enabled",
   "teakstweakscommand.info.support": "Support Server: <green><discord>",
-  "teakstweakscommand.paste.uploading": "<gold>Uploading to PasteBook...",
-  "teakstweakscommand.paste.success": "<yellow>Successfully uploaded to PasteBook!<newline><click:copy_to_clipboard:'<url>'><gold>Click here</gold> copy the link to your clipboard.</click><newline><click:open_url:'<url>'><gold>Click here</gold> to open the link in your browser.</click>",
-  "teakstweakscommand.paste.error": "<red>Failed to upload to PasteBook!",
-  "teakstweakscommand.paste.error.cooldown": "<red>Teak's Tweaks Paste can only be used once every 30 minutes!",
+  "teakstweakscommand.paste.uploading": "<gold>Uploading to <service_name>...",
+  "teakstweakscommand.paste.success": "<yellow>Successfully uploaded to <service_name>!<newline><click:copy_to_clipboard:'<url>'><gold>Click here</gold> to copy the link to your clipboard.</click><newline><click:open_url:'<url>'><gold>Click here</gold> to open the link in your browser.</click>",
+  "teakstweakscommand.paste.success.console": "<yellow>Successfully uploaded to <service_name>!<newline><gold><url></gold>",
+  "teakstweakscommand.paste.error": "<red>Failed to upload to <service_name>!",
+  "teakstweakscommand.paste.error.cooldown": "<red><service_name> can only be used once every 20 minutes!",
   "teakstweakscommand.give.unknown_item": "<red>Unknown item '<item>'.",
   "teakstweakscommand.give.error.amount.lt_1": "<red>Integer must not be less than 1.",
   "teakstweakscommand.give.error.amount.gt_6400": "<red>Integer must not be greater than 6400.",
@@ -601,5 +617,16 @@
   "workstationhighlight.error.radius_out_of_bounds": "<red>Radius must be between 1 and 16!",
   "workstationhighlight.error.no_workstations_found": "<red>No villager workstations found nearby!",
   "workstationhighlight.error.no_job_site": "<red>The nearest villager does not have a job site!",
-  "workstationhighlight.found": "<yellow>The workstation is located at <gold>[XYZ]: <x> <y> <z>"
+  "workstationhighlight.found": "<yellow>The workstation is located at <gold>[XYZ]: <x> <y> <z>",
+  "workstationhighlight.cleared": "<yellow>Cleared all highlights.",
+
+  "disposal.name": "Disposal",
+  "disposal.description": "Allow players to dispose of items.<newline>Command: /disposal",
+  "disposal.command_description": "Dispose of items.",
+
+  "always_active_beacons.name": "Always Active Beacons",
+  "always_active_beacons.description": "Allows beacons to always give effects, regardless of if they have sky access.",
+
+  "music_disc_engraver.name": "Music Disc Engraver",
+  "music_disc_engraver.description": "Craft an Empty Music Disc with 8 Iron Ingots and a Diamond.<newline>Engrave a music disc with a Stonecutter."
 }

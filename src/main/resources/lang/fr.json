@@ -191,10 +191,13 @@
   "graves.key.item_lore": "Faites un clic droit sur n'importe quelle tombe avec cette clé pour l'ouvrir.",
   "graves.log.created": "Création d'une tombe pour <player> en X : <x> Y : <y> Z : <z> dans le Monde : <world>",
   "graves.log.contains": "Contient <gold><item_count></gold> objets et <gold><xp_count></gold> XP.",
-  "graves.log.item": "- <gold><item> <white>x <gold><amount>",
+  "graves.log.item": "- <gold><item> <white>x <gold><amount><enchantments>",
 
   "nether_portal_coords.name": "Coordonnées du Portail du Nether",
   "nether_portal_coords.description": "Ajoute une commande qui calcule où un portail du Nether doit être placé dans l'autre dimension. Utile pour synchroniser les portails du Nether.<newline>Commande : /portal",
+
+  "painting_picker.name": "Sélecteur de Peinture",
+  "painting_picker.description": "Utilisez une tailleuse de pierre pour choisir une variante de peinture.",
 
   "real_time_clock.name": "Horloge Temps Réel",
   "real_time_clock.description": "Ajoute une commande permettant de voir depuis combien de temps un monde est en cours en minutes et heures réelles.<newline>Commande : /rtc",
@@ -252,6 +255,11 @@
   "quick_commands.fly.command_description": "Activez/désactivez le vol.",
   "quick_commands.enderchest.command_description": "Ouvrez votre enderchest.",
   "quick_commands.craftingtable.command_description": "Ouvrez une table de craft.",
+  "quick_commands.anvil.command_description": "Ouvrir une enclume.",
+  "quick_commands.cartographytable.command_description": "Ouvrir une table de cartographie.",
+  "quick_commands.grindstone.command_description": "Ouvrir une meule.",
+  "quick_commands.loom.command_description": "Ouvrir un métier à tisser.",
+  "quick_commands.smithingtable.command_description": "Ouvrir une table de forgeron.",
 
   "slime_cream.name": "Crème de Slime",
   "slime_cream.description": "Convertissez des Boules de Slime en Crème de Magma en cliquant avec un chaudron de lave.<newline>Convertissez de la Crème de Magma en Boules de Slime en cliquant avec un chaudron d'eau.",
@@ -324,6 +332,9 @@
 
   "charcoal_to_black_dye.name": "Charbon de bois en Colorant noir",
   "charcoal_to_black_dye.description": "Vous permet de transformer du charbon de bois en teinture noire.",
+
+  "cheaper_resin_blocks.name": "Blocs de Résine Moins Chers",
+  "cheaper_resin_blocks.description": "Vous permet de fabriquer des blocs de résine avec 4 touffes de résine au lieu de 9.",
 
   "coal_to_black_dye.name": "Charbon en Colorant noir",
   "coal_to_black_dye.description": "Vous permet de transformer du charbon en teinture noire.",
@@ -457,6 +468,8 @@
   "back.error.on_cooldown": "<red>Vous devez attendre <cooldown_seconds> secondes entre chaque utilisation du /back !",
   "back.error.no_back_location": "<red>Vous n'avez aucun endroit où retourner !",
   "back.error.moved": "<red>Vous devez rester immobile pour vous téléporter !",
+  "back.error.teleport_moved": "<red>Vous devez rester immobile pour vous téléporter !",
+  "back.teleporting_delayed": "<yellow>Téléportation dans <time> secondes...",
   "back.teleporting": "<yellow>Téléportation en cours...",
 
   "conduitpower.command_description": "Activer ou désactiver l'effet du conduit en mode spectateur.",
@@ -539,6 +552,8 @@
 
   "spawn.command_description": "Téléportez-vous au spawn du serveur.",
   "spawn.error.on_cooldown": "<red>Vous devez attendre <time> secondes entre chaque utilisation du /spawn !",
+  "spawn.error.teleport_moved": "<red>Vous devez rester immobile pour vous téléporter !",
+  "spawn.teleporting_delayed": "<yellow>Téléportation dans <time> secondes...",
   "spawn.error.moved": "<red>Vous devez rester immobile pour vous téléporter !",
   "spawn.teleporting": "<yellow>Téléportation au spawn en cours...",
 
@@ -565,9 +580,10 @@
   "teakstweakscommand.info.config_generated": "Génération de la configuration : <green><config_generated>",
   "teakstweakscommand.info.dev_mode_enabled": "Mode dev : <green>Enabled",
   "teakstweakscommand.info.support": "Serveur de support : <green><discord>",
-  "teakstweakscommand.paste.uploading": "<gold>Téléversement sur PasteBook...",
-  "teakstweakscommand.paste.success": "<yellow>Téléversé avec succès sur PasteBook !<newline><click:copy_to_clipboard:'<url>'><gold>Cliquez ici</gold> pour copier le lien dans votre presse-papiers.</click><newline><click:open_url:'<url>'><gold>Cliquez ici</gold> pour ouvrir le lien dans votre navigateur.</click>",
-  "teakstweakscommand.paste.error": "<red>Échec du téléversement sur PasteBook !",
+  "teakstweakscommand.paste.uploading": "<gold>Téléversement sur <service_name>...",
+  "teakstweakscommand.paste.success": "<yellow>Téléversé avec succès sur <service_name> !<newline><click:copy_to_clipboard:'<url>'><gold>Cliquez ici</gold> pour copier le lien dans votre presse-papiers.</click><newline><click:open_url:'<url>'><gold>Cliquez ici</gold> pour ouvrir le lien dans votre navigateur.</click>",
+  "teakstweakscommand.paste.success.console": "<yellow>Téléversé avec succès sur <service_name> !<newline><gold><url></gold>",
+  "teakstweakscommand.paste.error": "<red>Échec du téléversement sur <service_name> !",
   "teakstweakscommand.paste.error.cooldown": "<red>Le service de collage de Teak's Tweaks ne peut être utilisé qu'une fois toutes les 30 minutes !",
   "teakstweakscommand.give.unknown_item": "<red>Objet inconnu '<item>'.",
   "teakstweakscommand.give.error.amount.lt_1": "<red>Le nombre entier ne doit pas être inférieur à 1.",
@@ -603,5 +619,16 @@
   "workstationhighlight.error.radius_out_of_bounds": "<red>Le rayon doit être compris entre 1 et 16 !",
   "workstationhighlight.error.no_workstations_found": "<red>Aucune station de travail de villageois trouvée à proximité !",
   "workstationhighlight.error.no_job_site": "<red>Le villageois le plus proche est un chômeur !",
-  "workstationhighlight.found": "<yellow>La station de travail est située aux coordonnées <gold>[XYZ] : <x> <y> <z>"
+  "workstationhighlight.found": "<yellow>La station de travail est située aux coordonnées <gold>[XYZ] : <x> <y> <z>",
+  "workstationhighlight.cleared": "<yellow>Tous les surlignages ont été supprimés.",
+
+  "disposal.name": "Élimination",
+  "disposal.description": "Permet aux joueurs d’éliminer des objets.<newline>Commande : /disposal",
+  "disposal.command_description": "Éliminer des objets.",
+
+  "always_active_beacons.name": "Pyramides toujours actives",
+  "always_active_beacons.description": "Permet aux pyramides de toujours fournir des effets, même sans accès au ciel.",
+
+  "music_disc_engraver.name": "Graveur de Disques Musicaux",
+  "music_disc_engraver.description": "Fabrique un disque musical vierge avec 8 lingots de fer et un diamant.<newline>Grave un disque musical avec un tailleur de pierre."
 }

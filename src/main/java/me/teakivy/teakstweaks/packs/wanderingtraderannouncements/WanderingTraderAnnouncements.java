@@ -1,8 +1,6 @@
 package me.teakivy.teakstweaks.packs.wanderingtraderannouncements;
 
 import me.teakivy.teakstweaks.packs.BasePack;
-import me.teakivy.teakstweaks.packs.PackType;
-import me.teakivy.teakstweaks.utils.MM;
 import me.teakivy.teakstweaks.utils.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -19,7 +17,7 @@ public class WanderingTraderAnnouncements extends BasePack {
     private static final List<Location> traderLocations = new ArrayList<>();
 
     public WanderingTraderAnnouncements() {
-        super("wandering-trader-announcements",  PackType.MOBS, Material.EMERALD);
+        super("wandering-trader-announcements", Material.EMERALD);
     }
 
     @EventHandler
@@ -30,14 +28,14 @@ public class WanderingTraderAnnouncements extends BasePack {
         int radius = getConfig().getInt("radius");
         if (radius < 0) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                player.sendMessage(MM.toString(getText("announcement_all")));
+                player.sendMessage(getText("announcement_all"));
             }
             return;
         }
 
         event.getEntity().getWorld().getNearbyEntities(event.getEntity().getLocation(), radius, radius, radius).forEach(entity -> {
             if (entity.getType() == EntityType.PLAYER) {
-                entity.sendMessage(MM.toString(getText("announcement")));
+                entity.sendMessage(getText("announcement"));
             }
         });
     }

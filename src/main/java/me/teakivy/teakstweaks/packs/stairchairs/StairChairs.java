@@ -1,13 +1,9 @@
 package me.teakivy.teakstweaks.packs.stairchairs;
 
 import me.teakivy.teakstweaks.packs.BasePack;
-import me.teakivy.teakstweaks.packs.PackType;
-import me.teakivy.teakstweaks.utils.MM;
 import me.teakivy.teakstweaks.utils.permission.Permission;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Stairs;
 import org.bukkit.entity.*;
@@ -22,7 +18,7 @@ import java.util.Objects;
 public class StairChairs extends BasePack {
 
     public StairChairs() {
-        super("stair-chairs", PackType.TEAKSTWEAKS, Material.SMOOTH_QUARTZ_STAIRS);
+        super("stair-chairs", Material.SMOOTH_QUARTZ_STAIRS);
     }
 
 
@@ -47,7 +43,7 @@ public class StairChairs extends BasePack {
         Marker marker = (Marker) Objects.requireNonNull(loc.getWorld()).spawnEntity(loc, EntityType.MARKER);
         marker.addScoreboardTag("chair");
 
-        MM.player(event.getPlayer()).sendMessage(getText("chair_created"));
+        event.getPlayer().sendMessage(getText("chair_created"));
     }
 
     public boolean isChair(Location loc) {
@@ -69,7 +65,7 @@ public class StairChairs extends BasePack {
             }
         }
         event.getBlock().getWorld().dropItem(loc.add(.5, .5, .5), new ItemStack(Material.SADDLE));
-        MM.player(event.getPlayer()).sendMessage(getText("chair_destroyed"));
+        event.getPlayer().sendMessage(getText("chair_destroyed"));
     }
 
     @EventHandler
@@ -94,6 +90,6 @@ public class StairChairs extends BasePack {
     public void onDismount(EntityDismountEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         if (event.getDismounted().getScoreboardTags().contains("chair-rider")) event.getDismounted().remove();
-        event.getEntity().teleport(event.getEntity().getLocation().add(0, 1, 0));
+        event.getEntity().teleportAsync(event.getEntity().getLocation().add(0, 1, 0));
     }
 }

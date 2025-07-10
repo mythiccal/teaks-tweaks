@@ -189,11 +189,14 @@
   "graves.key.item_lore": "Нажмите ПКМ по любой могиле с этим ключом чтобы открыть её.",
   "graves.log.created": "Создана могила для <player> на XYZ: <x> <y> <z> в Мире: <world>",
   "graves.log.contains": "Содержит <gold><item_count></gold> предметов и <gold><xp_count></gold> XP.",
-  "graves.log.item": "- <gold><item> <white>x <gold><amount>",
+  "graves.log.item": "- <gold><item> <white>x <gold><amount><enchantments>",
   
   "nether_portal_coords.name": "Координаты Незер Портала",
   "nether_portal_coords.description": "Добавляет команду которая вычисляет на каких координатах появится портал в другом измерении. Удобно при линковании порталов. <newline>Команда: /portal",
-  
+
+  "painting_picker.name": "Выбор Картины",
+  "painting_picker.description": "Используйте камнерез, чтобы выбрать вариант картины.",
+
   "real_time_clock.name": "Часы Реального Времени",
   "real_time_clock.description": "Добавляет команду которая показывает как долго существует мир в реальных часах и минутах.<newline>Команда: /rtc",
   
@@ -249,6 +252,11 @@
   "quick_commands.fly.command_description": "Переключить полёт.",
   "quick_commands.enderchest.command_description": "Открыть свой Эндер-сундук.",
   "quick_commands.craftingtable.command_description": "Открыть Верстак.",
+  "quick_commands.anvil.command_description": "Открыть наковальню.",
+  "quick_commands.cartographytable.command_description": "Открыть картографический стол.",
+  "quick_commands.grindstone.command_description": "Открыть точило.",
+  "quick_commands.loom.command_description": "Открыть ткацкий станок.",
+  "quick_commands.smithingtable.command_description": "Открыть кузнечный стол.",
   
   "slime_cream.name": "Слизневый крем",
   "slime_cream.description": "Нажмите ПКМ со сгустком слизи по котлу с лавой чтобы превратить его в магмовый крем.<newline>Нажмите ПКМ с магмовым кремом по котлу с водой чтобы превратить его в сгусток слизи.",
@@ -320,7 +328,10 @@
   
   "charcoal_to_black_dye.name": "Древесный уголь в Чёрный краситель",
   "charcoal_to_black_dye.description": "Позволяет создавать чёрный краситель из древесного угля.",
-  
+
+  "cheaper_resin_blocks.name": "Дешёвые Смоляные Блоки",
+  "cheaper_resin_blocks.description": "Позволяет создавать смоляные блоки, используя 4 комка смолы вместо 9.",
+
   "coal_to_black_dye.name": "Уголь в Чёрный краситель",
   "coal_to_black_dye.description": "Позволяет создавать чёрный краситель из угля.",
   
@@ -453,6 +464,8 @@
   "back.error.on_cooldown": "<red>Вы должны подождать ещё <cooldown_seconds> секунд прежде чем использовать /back!",
   "back.error.no_back_location": "<red>Вам некуда возвращаться!",
   "back.error.moved": "<red>Вы должны стоять на месте для телепортации!",
+  "back.error.teleport_moved": "<red>Вы должны стоять на месте, чтобы телепортироваться!",
+  "back.teleporting_delayed": "<yellow>Телепортация через <time> секунд...",
   "back.teleporting": "<yellow>Телепортируем назад...",
   
   "conduitpower.command_description": "Переключает Силу Источника для наблюдателей.",
@@ -535,6 +548,8 @@
   
   "spawn.command_description": "Телепортирует на спавн сервера.",
   "spawn.error.on_cooldown": "<red>Вы должны подождать ещё <time> секунд, прежде чем использовать /spawn!",
+  "spawn.error.teleport_moved": "<red>Вы должны стоять на месте, чтобы телепортироваться!",
+  "spawn.teleporting_delayed": "<yellow>Телепортация через <time> секунд...",
   "spawn.error.moved": "<red>Вы должны стоять на месте для телепортации!",
   "spawn.teleporting": "<yellow>Телепортация на спавн...",
   
@@ -561,10 +576,11 @@
   "teakstweakscommand.info.config_generated": "Конфиг Сгенерирован: <green><config_generated>",
   "teakstweakscommand.info.dev_mode_enabled": "Режим Разработчика: <green>Включён",
   "teakstweakscommand.info.support": "Сервер Поддержки: <green><discord>",
-  "teakstweakscommand.paste.uploading": "<gold>Загружается на PasteBook...",
-  "teakstweakscommand.paste.success": "<yellow>Удачно загружено на PasteBook!<newline><click:copy_to_clipboard:'<url>'><gold>Нажмите здесь</gold> чтобы скопировать в буфер обмена.</click><newline><click:open_url:'<url>'><gold>Нажмите здесь</gold> чтобы открыть ссылку в вашем браузере.</click>",
-  "teakstweakscommand.paste.error": "<red>Не удалось загрузить на PasteBook!",
-  "teakstweakscommand.paste.error.cooldown": "<red>Teak's Tweaks Paste можно использовать только раз в 30 минут!",
+  "teakstweakscommand.paste.uploading": "<gold>Загружается на <service_name>...",
+  "teakstweakscommand.paste.success": "<yellow>Удачно загружено на <service_name>!<newline><click:copy_to_clipboard:'<url>'><gold>Нажмите здесь</gold> чтобы скопировать в буфер обмена.</click><newline><click:open_url:'<url>'><gold>Нажмите здесь</gold> чтобы открыть ссылку в вашем браузере.</click>",
+  "teakstweakscommand.paste.success.console": "<yellow>Удачно загружено на <service_name>!<newline><gold><url></gold>",
+  "teakstweakscommand.paste.error": "<red>Не удалось загрузить на <service_name>!",
+  "teakstweakscommand.paste.error.cooldown": "<red><service_name> можно использовать только раз в 30 минут!",
   "teakstweakscommand.give.unknown_item": "<red>Неизвестный предмет '<item>'.",
   "teakstweakscommand.give.error.amount.lt_1": "<red>Значение не должно быть меньше чем 1.",
   "teakstweakscommand.give.error.amount.gt_6400": "<red>Значение не должно быть больше чем 6400.",
@@ -599,5 +615,16 @@
   "workstationhighlight.error.radius_out_of_bounds": "<red>Радиус должен быть между 1 и 16!",
   "workstationhighlight.error.no_workstations_found": "<red>Рядом не найдено рабочих мест для жителей!",
   "workstationhighlight.error.no_job_site": "<red>Ближайший житель не имеет места работы!",
-  "workstationhighlight.found": "<yellow>Рабочее место расположено на <gold>[XYZ]: <x> <y> <z>"
+  "workstationhighlight.found": "<yellow>Рабочее место расположено на <gold>[XYZ]: <x> <y> <z>",
+  "workstationhighlight.cleared": "<yellow>Все подсветки удалены.",
+
+  "disposal.name": "Утилизация",
+  "disposal.description": "Позволяет игрокам утилизировать предметы.<newline>Команда: /disposal",
+  "disposal.command_description": "Утилизировать предметы.",
+
+  "always_active_beacons.name": "Всегда активные маяки",
+  "always_active_beacons.description": "Позволяет маякам всегда давать эффекты, независимо от доступа к небу.",
+
+  "music_disc_engraver.name": "Гравёр Музыкальных Дисков",
+  "music_disc_engraver.description": "Создайте пустой музыкальный диск из 8 железных слитков и алмаза.<newline>Гравируйте музыкальный диск на камнерезе."
 }

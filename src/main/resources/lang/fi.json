@@ -190,10 +190,13 @@
   "graves.key.item_lore": "Oikea klikkaa mitä tahansa hautaa tällä avaimella avataksesi sen.",
   "graves.log.created": "Luotu hauta pelaajalle <player> sijainnissa XYZ: <x> <y> <z> maailmassa: <world>",
   "graves.log.contains": "Sisältää <gold><item_count></gold> esinettä ja <gold><xp_count></gold> XP pistettä.",
-  "graves.log.item": "- <gold><item> <white>x <gold><amount>",
+  "graves.log.item": "- <gold><item> <white>x <gold><amount><enchantments>",
 
   "nether_portal_coords.name": "Horna Portaali Koordinaatit",
   "nether_portal_coords.description": "Lisää komennon joka laskee minne horna portaali on sijoitettava toisessa ulottuvuudessa. Hyödyllinen horna portaalien synkronointiin.<newline>Komento: /portal",
+
+  "painting_picker.name": "Maalausvalitsin",
+  "painting_picker.description": "Käytä kivileikkuria valitaksesi maalauksen version.",
 
   "real_time_clock.name": "Reaaliaikainen kello",
   "real_time_clock.description": "Lisää komennon jonka avulla voit tarkastella kuinka kauan maailma on ollut käynnissä reaaliajassa minuutteina ja tunteina.<newline>Komento: /rtc",
@@ -251,6 +254,11 @@
   "quick_commands.fly.command_description": "Kytke lento päälle ja pois.",
   "quick_commands.enderchest.command_description": "Avaa sinun ender-arkkusi.",
   "quick_commands.craftingtable.command_description": "Avaa työpöytä.",
+  "quick_commands.anvil.command_description": "Avaa alasin.",
+  "quick_commands.cartographytable.command_description": "Avaa karttapöytä.",
+  "quick_commands.grindstone.command_description": "Avaa hiomakivi.",
+  "quick_commands.loom.command_description": "Avaa kangaspuut.",
+  "quick_commands.smithingtable.command_description": "Avaa ahjopöytä.",
 
   "slime_cream.name": "Lima voide",
   "slime_cream.description": "Muunna limapallot magma voiteeksi oikea klikkaamalla laava pataa.<newline>Muunna magma voide limapalloiksi oikea klikkaamalla vesi pataa.",
@@ -323,6 +331,9 @@
 
   "charcoal_to_black_dye.name": "Puuhiili mustaksi väriaineeksi",
   "charcoal_to_black_dye.description": "Mahdollistaa puuhiilen muuttamisen mustaksi väriaineeksi.",
+
+  "cheaper_resin_blocks.name": "Halvemmat Pihkablockit",
+  "cheaper_resin_blocks.description": "Mahdollistaa pihkablockien valmistamisen käyttämällä 4 pihkatummaa 9 sijasta.",
 
   "coal_to_black_dye.name": "Hiili mustaksi väriaineeksi",
   "coal_to_black_dye.description": "Mahdollistaa hiilen muuttamisen mustaksi väriaineeksi.",
@@ -456,6 +467,8 @@
   "back.error.on_cooldown": "<red>Sinun pitää odottaa <cooldown_seconds> sekunttia /back komentojen käyttöjen välillä!",
   "back.error.no_back_location": "<red>Sinulla ei ole paikkaa mihin palata!",
   "back.error.moved": "<red>Sinun pitää seisoa paikallaan teleportataksesi!",
+  "back.error.teleport_moved": "<red>Sinun täytyy pysyä paikallasi teleportataksesi!",
+  "back.teleporting_delayed": "<yellow>Teleportaatio <time> sekunnissa...",
   "back.teleporting": "<yellow>Teleportataan takaisin...",
 
   "conduitpower.command_description": "Kytke kanavoinnin voima päälle ja pois katselijatilassa.",
@@ -538,6 +551,8 @@
 
   "spawn.command_description": "Teleporttaa serverin syntymäpisteeseen.",
   "spawn.error.on_cooldown": "<red>Sinun pitää odottaa <time> sekunttia /spawn komennon käyttöjen välillä!",
+  "spawn.error.teleport_moved": "<red>Sinun täytyy pysyä paikallasi teleportataksesi!",
+  "spawn.teleporting_delayed": "<yellow>Teleportaatio <time> sekunnissa...",
   "spawn.error.moved": "<red>Sinun pitää seisoa paikallaan teleportataksesi!",
   "spawn.teleporting": "<yellow>Teleportataan syntymäpisteeseen...",
 
@@ -564,9 +579,10 @@
   "teakstweakscommand.info.config_generated": "Config luotu: <green><config_generated>",
   "teakstweakscommand.info.dev_mode_enabled": "Kehittäjä tila: <green>Kytketty päälle",
   "teakstweakscommand.info.support": "Tuki serveri: <green><discord>",
-  "teakstweakscommand.paste.uploading": "<gold>Ladataan PasteBookiin...",
-  "teakstweakscommand.paste.success": "<yellow>Onnistuneesti ladattiin PasteBookiin!<newline><click:copy_to_clipboard:'<url>'><gold>Klikkaa tästä</gold> kopiodaksesi linkki leikepöydälle.</click><newline><click:open_url:'<url>'><gold>Klikkaa tästä</gold> avatksesi linkin selaimessa.</click>",
-  "teakstweakscommand.paste.error": "<red>Lataaminen PasteBookiin epäonnistui!",
+  "teakstweakscommand.paste.uploading": "<gold>Ladataan <service_name>...",
+  "teakstweakscommand.paste.success": "<yellow>Onnistuneesti ladattiin <service_name>!<newline><click:copy_to_clipboard:'<url>'><gold>Klikkaa tästä</gold> kopiodaksesi linkki leikepöydälle.</click><newline><click:open_url:'<url>'><gold>Klikkaa tästä</gold> avatksesi linkin selaimessa.</click>",
+  "teakstweakscommand.paste.success.console": "<yellow>Onnistuneesti ladattiin <service_name>!<newline><gold><url></gold>",
+  "teakstweakscommand.paste.error": "<red>Lataaminen <service_name> epäonnistui!",
   "teakstweakscommand.paste.error.cooldown": "<red>Teak's Tweaksin liittoa voidaan käyttää vain kerran puolessa tunnissa!",
   "teakstweakscommand.give.unknown_item": "<red>Tuntematon esine '<item>'.",
   "teakstweakscommand.give.error.amount.lt_1": "<red>Kokonaisluku ei saa olla alle 1.",
@@ -602,5 +618,16 @@
   "workstationhighlight.error.radius_out_of_bounds": "<red>Säteen pitää olla 1 ja 16 välillä!",
   "workstationhighlight.error.no_workstations_found": "<red>Läheltä ei löytynyt yhtäkään kyläläisen työpöytää!",
   "workstationhighlight.error.no_job_site": "<red>Lähimmällä kyläläisellä ei ole työpaikkaa!",
-  "workstationhighlight.found": "<yellow>Työpöytä on sijainnissa <gold>[XYZ]: <x> <y> <z>"
+  "workstationhighlight.found": "<yellow>Työpöytä on sijainnissa <gold>[XYZ]: <x> <y> <z>",
+  "workstationhighlight.cleared": "<yellow>Kaikki korostukset poistettu.",
+
+  "disposal.name": "Hävittäminen",
+  "disposal.description": "Sallii pelaajien hävittää esineitä.<newline>Komento: /disposal",
+  "disposal.command_description": "Hävitä esineitä.",
+
+  "always_active_beacons.name": "Aina aktiiviset majakat",
+  "always_active_beacons.description": "Mahdollistaa majakoiden antaa vaikutuksia aina, riippumatta taivasnäkyvyydestä.",
+
+  "music_disc_engraver.name": "Musiikkilevyn Kaivertaja",
+  "music_disc_engraver.description": "Valmista tyhjä musiikkilevy 8 rautaharkosta ja timantista.<newline>Kaiverra musiikkilevy kivileikkurilla."
 }

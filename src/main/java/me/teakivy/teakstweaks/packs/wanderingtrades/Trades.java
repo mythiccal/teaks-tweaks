@@ -2,8 +2,6 @@ package me.teakivy.teakstweaks.packs.wanderingtrades;
 
 import me.teakivy.teakstweaks.TeaksTweaks;
 import me.teakivy.teakstweaks.packs.BasePack;
-import me.teakivy.teakstweaks.packs.PackType;
-import me.teakivy.teakstweaks.utils.MM;
 import me.teakivy.teakstweaks.utils.UUIDUtils;
 import me.teakivy.teakstweaks.utils.config.Config;
 import me.teakivy.teakstweaks.utils.lang.Translatable;
@@ -27,22 +25,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Trades extends BasePack {
-    private static final List<Location> traderLocations = new ArrayList<>();
 
     public Trades() {
-        super("wandering-trades", PackType.HERMITCRAFT, Material.LEAD);
+        super("wandering-trades", Material.LEAD);
     }
 
     @EventHandler
     public void traderSpawn(EntitySpawnEvent event) {
         if (event.getEntityType() == EntityType.WANDERING_TRADER) {
             Location location = event.getLocation().clone();
-            if (traderLocations.contains(location)) {
-                traderLocations.remove(location);
-                return;
-            }  // Prevents infinite loop of traders spawning
-            traderLocations.add(location);
-            event.setCancelled(true);
             if (Config.isPackEnabled("wandering-trader-announcements")) {
                 runAnnouncement(location);
             }
@@ -55,7 +46,7 @@ public class Trades extends BasePack {
                 getHeadTrades().thenAccept((recipes1) -> {
                     // Required to run on main thread
                     Bukkit.getScheduler().runTask(TeaksTweaks.getInstance(), () -> {
-                        WanderingTrader trader = (WanderingTrader) location.getWorld().spawnEntity(location, EntityType.WANDERING_TRADER);
+                        WanderingTrader trader = (WanderingTrader) event.getEntity();
                         recipes.addAll(recipes1);
                         recipes.addAll(MiniBlocks.getBlockTrades());
                         recipes.addAll(trader.getRecipes());
@@ -64,7 +55,7 @@ public class Trades extends BasePack {
                 });
                 return;
             }
-            WanderingTrader trader = (WanderingTrader) location.getWorld().spawnEntity(location, EntityType.WANDERING_TRADER);
+            WanderingTrader trader = (WanderingTrader) event.getEntity();
             recipes.addAll(MiniBlocks.getBlockTrades());
 
             recipes.addAll(trader.getRecipes());
@@ -77,14 +68,14 @@ public class Trades extends BasePack {
         int radius = config.getInt("radius");
         if (radius < 0) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                player.sendMessage(MM.toString(Translatable.get("wandering_trader_announcements.announcement_all")));
+                player.sendMessage(Translatable.get("wandering_trader_announcements.announcement_all"));
             }
             return;
         }
 
         location.getWorld().getNearbyEntities(location, radius, radius, radius).forEach(entity -> {
             if (entity.getType() == EntityType.PLAYER) {
-                entity.sendMessage(MM.toString(Translatable.get("wandering_trader_announcements.announcement")));
+                entity.sendMessage(Translatable.get("wandering_trader_announcements.announcement"));
             }
         });
     }

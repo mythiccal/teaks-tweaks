@@ -2,16 +2,15 @@ package me.teakivy.teakstweaks.packs.moremobheads;
 
 import me.teakivy.teakstweaks.TeaksTweaks;
 import me.teakivy.teakstweaks.utils.Key;
-import me.teakivy.teakstweaks.utils.MM;
 import me.teakivy.teakstweaks.utils.config.Config;
 import me.teakivy.teakstweaks.utils.customitems.CustomItem;
-import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
@@ -63,11 +62,22 @@ public abstract class BaseMobHead implements Listener {
         if (!dropHead(event)) return;
 
         Advancement advancement = Bukkit.getAdvancement(Key.get("moremobheads/" + getName(event).toLowerCase().replaceAll(" ", "_") + "_head"));
-        if (advancement == null) return;
-        AdvancementProgress progress = player.getAdvancementProgress(advancement);
-        for(String criteria : progress.getRemainingCriteria()) progress.awardCriteria(criteria);
+        if (advancement != null) {
+            AdvancementProgress progress = player.getAdvancementProgress(advancement);
+            for (String criteria : progress.getRemainingCriteria()) progress.awardCriteria(criteria);
+        }
 
-        event.getDrops().add(getHead(event));
+        boolean hasHead = false;
+        for (ItemStack item : event.getDrops()) {
+            if (item.getType() == Material.PLAYER_HEAD) {
+                hasHead = true;
+                break;
+            }
+        }
+
+        if (!hasHead) {
+            event.getDrops().add(getHead(event));
+        }
     }
 
     public boolean dropHead(EntityDeathEvent event) {
@@ -113,11 +123,11 @@ public abstract class BaseMobHead implements Listener {
     }
 
     public ItemStack createHead(EntityDeathEvent event, String name, String texture) {
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
         PlayerProfile profile = Bukkit.createPlayerProfile(UUID.fromString("fdb5599c-1b14-440e-82df-d69719703d21"), "MobHead");
         SkullMeta meta = (SkullMeta)head.getItemMeta();
         Component c = MiniMessage.miniMessage().deserialize("<yellow>" + name.replace(" Head", "'s Head")).decoration(TextDecoration.ITALIC, false);
-        meta.setDisplayName(MM.toString(c));
+        meta.displayName(c);
         PlayerTextures textures = profile.getTextures();
 
         try {
@@ -127,7 +137,7 @@ public abstract class BaseMobHead implements Listener {
         }
 
         meta.setOwnerProfile(profile);
-        meta.setNoteBlockSound(getSound(event).getKey());
+        meta.setNoteBlockSound(Registry.SOUNDS.getKey(getSound(event)));
         head.setItemMeta(meta);
         return head;
     }

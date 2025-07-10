@@ -2,7 +2,6 @@ package me.teakivy.teakstweaks.packs.spawningspheres;
 
 import me.teakivy.teakstweaks.TeaksTweaks;
 import me.teakivy.teakstweaks.packs.BasePack;
-import me.teakivy.teakstweaks.packs.PackType;
 import me.teakivy.teakstweaks.utils.JsonManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,7 +16,7 @@ public class SpheresPack extends BasePack {
     private static SpawningSphere greenSphere;
 
     public SpheresPack() {
-        super("spawning-spheres", PackType.UTILITIES, Material.WARDEN_SPAWN_EGG);
+        super("spawning-spheres", Material.WARDEN_SPAWN_EGG);
     }
 
     @Override
@@ -70,11 +69,11 @@ public class SpheresPack extends BasePack {
 
         Location location = executor.getLocation();
 
-        executor.teleport(sphere.getCenter());
+        executor.teleportAsync(sphere.getCenter());
 
         Bukkit.getScheduler().runTaskLater(TeaksTweaks.getInstance(), sphere::removeSphere, 20L);
         Bukkit.getScheduler().runTaskLater(TeaksTweaks.getInstance(), () -> {
-            executor.teleport(location);
+            executor.teleportAsync(location);
             save();
         }, 20L * 3);
         return true;
