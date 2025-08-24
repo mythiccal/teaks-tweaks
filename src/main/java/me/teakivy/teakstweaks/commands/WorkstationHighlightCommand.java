@@ -1,8 +1,18 @@
 package me.teakivy.teakstweaks.commands;
 
-import me.teakivy.teakstweaks.packs.workstationhighlights.Highlighter;
-import me.teakivy.teakstweaks.utils.command.*;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import me.teakivy.teakstweaks.packs.workstationhighlights.WorkstationHighlights;
+import me.teakivy.teakstweaks.utils.command.AbstractCommand;
 import me.teakivy.teakstweaks.utils.permission.Permission;
+import me.teakivy.teakstweaks.utils.register.TTCommand;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.*;
@@ -10,68 +20,78 @@ import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class WorkstationHighlightCommand extends AbstractCommand {
-
     private static final String[] professionTypes = new String[] {
-            "any",
-            "armorer",
-            "butcher",
-            "cartographer",
-            "cleric",
-            "farmer",
-            "fisherman",
-            "fletcher",
-            "leatherworker",
-            "librarian",
-            "mason",
-            "shepherd",
-            "toolsmith",
-            "weaponsmith"
+        "any",
+        "armorer",
+        "butcher",
+        "cartographer",
+        "cleric",
+        "farmer",
+        "fisherman",
+        "fletcher",
+        "leatherworker",
+        "librarian",
+        "mason",
+        "shepherd",
+        "toolsmith",
+        "weaponsmith"
     };
 
     public WorkstationHighlightCommand() {
-        super(CommandType.PLAYER_ONLY, "workstation-highlights", "workstationhighlight", Permission.COMMAND_WORKSTATIONHIGHLIGHT, Arg.optional("profession", "clear"), Arg.optional("radius"));
+        super(TTCommand.WORKSTATIONHIGHLIGHT, "workstationhighlight");
     }
 
     @Override
-    public void playerCommand(PlayerCommandEvent event) {
-        Player player = event.getPlayer();
-        String profession = professionTypes[0];
-        int radius = 3;
+    public LiteralCommandNode<CommandSourceStack> getCommand() {
+        return Commands.literal("workstationhighlight")
+                .requires(perm(Permission.COMMAND_SUDOKU))
+                .executes(ctx -> {
+                    Player player = checkPlayer(ctx);
+                    if (player == null) return Command.SINGLE_SUCCESS;
 
-        if (event.hasArgs(1) && event.getArg(0).equalsIgnoreCase("clear")) {
-            Highlighter.clear();
-            sendMessage("cleared");
-            return;
-        }
+                    highlight(player, "any", 8);
+                    return Command.SINGLE_SUCCESS;
+                })
+                .then(Commands.argument("profession", StringArgumentType.word())
+                        .executes(ctx -> {
+                            Player player = checkPlayer(ctx);
+                            if (player == null) return Command.SINGLE_SUCCESS;
 
-        if (event.hasArgs(1)) {
-            if (!Arrays.toString(professionTypes).contains(event.getArg(0))) {
-                sendError("invalid_profession");
-                return;
-            }
+                            String profession = ctx.getArgument("profession", String.class);
+                            if (!Arrays.toString(professionTypes).contains(profession)) {
+                                player.sendMessage(getError("invalid_profession"));
+                                return Command.SINGLE_SUCCESS;
+                            }
 
-            profession = event.getArg(0);
-        }
+                            highlight(player, profession, 8);
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .suggests(this::professionSuggestions)
+                        .then(Commands.argument("radius", IntegerArgumentType.integer(1, 16))
+                                .executes(ctx -> {
+                                    Player player = checkPlayer(ctx);
+                                    if (player == null) return Command.SINGLE_SUCCESS;
 
-        if (event.hasArgs(2)) {
-            try {
-                radius = Integer.parseInt(event.getArg(1));
-            } catch (NumberFormatException e) {
-                sendError("invalid_radius");
-                return;
-            }
-        }
+                                    String profession = ctx.getArgument("profession", String.class);
+                                    if (!Arrays.toString(professionTypes).contains(profession)) {
+                                        player.sendMessage(getError("invalid_profession"));
+                                        return Command.SINGLE_SUCCESS;
+                                    }
 
-        if (radius < 1 || radius > 16) {
-            sendError("error.radius_out_of_bounds");
-            return;
-        }
+                                    int radius = ctx.getArgument("radius", Integer.class);
+                                    highlight(player, profession, radius);
+                                    return Command.SINGLE_SUCCESS;
+                                })))
+                .then(Commands.literal("clear")
+                        .executes(this::clear))
+                .build();
+    }
 
+    private void highlight(Player player, String profession, int radius) {
         Entity entity = null;
         double distance = Integer.MAX_VALUE;
         for (Entity e : player.getNearbyEntities(radius, radius, radius)) {
@@ -91,31 +111,28 @@ public class WorkstationHighlightCommand extends AbstractCommand {
         }
 
         if (entity == null) {
-           sendError("no_workstations_found");
+            player.sendMessage(getError("no_workstations_found"));
             return;
         }
 
         Villager villager = (Villager) entity;
         Location jobSite = villager.getMemory(MemoryKey.JOB_SITE);
         if (jobSite == null) {
-            sendError("no_job_site");
+            player.sendMessage(getError("no_job_site"));
             return;
         }
 
         villager.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 200, 0, false, false, false));
-        Highlighter.glowingBlock(jobSite, 200);
+        WorkstationHighlights.glowingBlock(jobSite, 200);
         createParticles(jobSite.add(.5, 1, .5));
-        sendMessage("found", insert("x", jobSite.getBlockX()), insert("y", jobSite.getBlockY()), insert("z", jobSite.getBlockZ()));
+        player.sendMessage(getText("found", insert("x", jobSite.getBlockX()), insert("y", jobSite.getBlockY()), insert("z", jobSite.getBlockZ())));
     }
 
-    @Override
-    public List<String> tabComplete(TabCompleteEvent event) {
-        List<String> arg1 = new ArrayList<>(Arrays.asList(professionTypes));
-        arg1.add("clear");
-        if (event.isArg(0)) return arg1;
-        if (event.isArg(1)) return List.of("[radius]");
-
-        return null;
+    private int clear(CommandContext<CommandSourceStack> context) {
+        Player player = (Player) context.getSource().getSender();
+        WorkstationHighlights.clear();
+        player.sendMessage(getText("cleared"));
+        return Command.SINGLE_SUCCESS;
     }
 
     private void createParticles(Location location) {
@@ -126,5 +143,14 @@ public class WorkstationHighlightCommand extends AbstractCommand {
         e.setRadiusOnUse(0);
         e.setDuration(200);
         e.setWaitTime(10);
+    }
+
+    public CompletableFuture<Suggestions> professionSuggestions(final CommandContext<CommandSourceStack> ctx, final SuggestionsBuilder builder) {
+        builder.restart();
+        if (!(ctx.getSource().getSender() instanceof Player player)) return builder.buildFuture();
+        for (String profession : professionTypes) {
+            if (profession.toLowerCase().startsWith(builder.getRemainingLowerCase())) builder.suggest(profession);
+        }
+        return builder.buildFuture();
     }
 }

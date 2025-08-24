@@ -1,50 +1,63 @@
 package me.teakivy.teakstweaks.commands;
 
-import me.teakivy.teakstweaks.packs.itemaverages.ItemTracker;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import me.teakivy.teakstweaks.packs.itemaverages.ItemAverages;
 import me.teakivy.teakstweaks.utils.command.AbstractCommand;
-import me.teakivy.teakstweaks.utils.command.Arg;
-import me.teakivy.teakstweaks.utils.command.CommandType;
-import me.teakivy.teakstweaks.utils.command.PlayerCommandEvent;
 import me.teakivy.teakstweaks.utils.permission.Permission;
+import me.teakivy.teakstweaks.utils.register.TTCommand;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class ItemAveragesCommand extends AbstractCommand {
 
-
     public ItemAveragesCommand() {
-        super(CommandType.PLAYER_ONLY, "item-averages", "itemaverages", Permission.COMMAND_ITEMAVERAGES, Arg.required("create", "uninstall"));
+        super(TTCommand.ITEMAVERAGES, "itemaverages");
     }
 
     @Override
-    public void playerCommand(PlayerCommandEvent event) {
-        Player player = event.getPlayer();
-        if (event.isArg(0, "create")) {
+    public LiteralCommandNode<CommandSourceStack> getCommand() {
+        return Commands.literal("itemaverages")
+                .requires(perm(Permission.COMMAND_ITEMAVERAGES))
+                .then(Commands.literal("create")
+                    .requires(perm(Permission.COMMAND_ITEMAVERAGES))
+                    .executes(playerOnly(this::create)))
+                .then(Commands.literal("uninstall")
+                    .requires(perm(Permission.COMMAND_ITEMAVERAGES_UNINSTALL))
+                    .executes(playerOnly(this::uninstall)))
+                .build();
+    }
 
-            if (ItemTracker.inUse) {
-                sendError("tracker_in_use");
-                return;
-            }
-
-            Location loc = player.getLocation().getBlock().getLocation();
-            sendMessage("tracker_created",
-                    insert("x", loc.getBlockX()),
-                    insert("y", loc.getBlockY()),
-                    insert("z", loc.getBlockZ()));
-            ItemTracker.spawnTracker(loc, player);
+    private int create(CommandContext<CommandSourceStack> context) {
+        Player player = (Player) context.getSource().getSender();
+        if (ItemAverages.inUse) {
+            player.sendMessage(getError("tracker_in_use"));
+            return Command.SINGLE_SUCCESS;
         }
 
-        if (event.isArg(0, "uninstall")) {
-            if (!checkPermission(Permission.COMMAND_ITEMAVERAGES_UNINSTALL)) return;
-            int count = 0;
-            for (Entity entity : player.getWorld().getEntities()) {
-                if (entity.getScoreboardTags().contains("tracker")) {
-                    count++;
-                    entity.remove();
-                }
+        Location loc = player.getLocation().getBlock().getLocation();
+        player.sendMessage(getText("tracker_created",
+                insert("x", loc.getBlockX()),
+                insert("y", loc.getBlockY()),
+                insert("z", loc.getBlockZ())));
+        ItemAverages.spawnTracker(loc, player);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int uninstall(CommandContext<CommandSourceStack> context) {
+        Player player = (Player) context.getSource().getSender();
+        int count = 0;
+        for (Entity entity : player.getWorld().getEntities()) {
+            if (entity.getScoreboardTags().contains("tracker")) {
+                count++;
+                entity.remove();
             }
-            sendMessage("tracker_mass_removed", insert("count", count));
         }
+        player.sendMessage(getText("tracker_mass_removed", insert("count", count)));
+        return Command.SINGLE_SUCCESS;
     }
 }

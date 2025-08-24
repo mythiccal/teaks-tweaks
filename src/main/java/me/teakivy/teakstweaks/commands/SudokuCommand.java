@@ -1,22 +1,37 @@
 package me.teakivy.teakstweaks.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import me.teakivy.teakstweaks.utils.command.AbstractCommand;
-import me.teakivy.teakstweaks.utils.command.CommandType;
-import me.teakivy.teakstweaks.utils.command.PlayerCommandEvent;
 import me.teakivy.teakstweaks.utils.permission.Permission;
-
-import java.util.List;
+import me.teakivy.teakstweaks.utils.register.TTCommand;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class SudokuCommand extends AbstractCommand {
 
     public SudokuCommand() {
-        super(CommandType.PLAYER_ONLY, "sudoku", "sudoku", Permission.COMMAND_SUDOKU, List.of("suicide"));
+        super(TTCommand.SUDOKU, "sudoku");
     }
 
     @Override
-    public void playerCommand(PlayerCommandEvent event) {
-        sendMessage("committed");
-        event.getPlayer().getScoreboardTags().add("sudoku-message");
-        event.getPlayer().setHealth(0);
+    public LiteralCommandNode<CommandSourceStack> getCommand() {
+        return Commands.literal("sudoku")
+                .requires(perm(Permission.COMMAND_SUDOKU))
+                .executes(playerOnly(this::sudoku))
+                .build();
+    }
+
+    private int sudoku(CommandContext<CommandSourceStack> context) {
+        Player player = (Player) context.getSource().getSender();
+        player.sendMessage(getText("committed"));
+        player.getScoreboardTags().add("sudoku-message");
+        player.setHealth(0);
+        return Command.SINGLE_SUCCESS;
     }
 }

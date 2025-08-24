@@ -1,38 +1,48 @@
 package me.teakivy.teakstweaks.commands;
 
-import me.teakivy.teakstweaks.packs.afkdisplay.AFK;
-import me.teakivy.teakstweaks.utils.ErrorType;
-import me.teakivy.teakstweaks.utils.command.*;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import me.teakivy.teakstweaks.packs.afkdisplay.AFKDisplay;
+import me.teakivy.teakstweaks.utils.command.AbstractCommand;
 import me.teakivy.teakstweaks.utils.permission.Permission;
+import me.teakivy.teakstweaks.utils.register.TTCommand;
 import org.bukkit.entity.Player;
 
 public class AFKCommand extends AbstractCommand {
 
     public AFKCommand() {
-        super(CommandType.PLAYER_ONLY, "afk-display", "afk", Permission.COMMAND_AFK, Arg.optional("uninstall"));
+        super(TTCommand.AFK, "afk");
     }
 
     @Override
-    public void playerCommand(PlayerCommandEvent event) {
-        Player player = event.getPlayer();
-        if (event.isArgsSize(1) && event.isArg(0, "uninstall")) {
-            if (!checkPermission(Permission.COMMAND_AFK_UNINSTALL)) return;
+    public LiteralCommandNode<CommandSourceStack> getCommand() {
+        return Commands.literal("afk")
+                .requires(sender -> sender.getSender().hasPermission(Permission.COMMAND_AFK.getPermission()) && getPackConfig().getBoolean("allow-afk-command"))
+                .executes(this::afk)
+                .then(Commands.literal("uninstall")
+                        .requires(perm(Permission.COMMAND_AFK_UNINSTALL))
+                        .executes(playerOnly(this::uninstall)))
+                .build();
+    }
 
-            AFK.uninstall();
-        }
-
-        if (!getPackConfig().getBoolean("allow-afk-command")) {
-            sendError(ErrorType.COMMAND_DISABLED);
-            return;
-        }
-
-        if (AFK.afk.containsKey(player.getUniqueId())) {
-            if (AFK.afk.get(player.getUniqueId())) {
-                AFK.unAFK(player);
-                return;
+    private int afk(CommandContext<CommandSourceStack> ctx) {
+        Player player = (Player) ctx.getSource().getSender();
+        if (AFKDisplay.afk.containsKey(player.getUniqueId())) {
+            if (AFKDisplay.afk.get(player.getUniqueId())) {
+                AFKDisplay.unAFK(player);
+                return Command.SINGLE_SUCCESS;
             }
 
-            AFK.afk(player, true);
+            AFKDisplay.afk(player, true);
         }
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int uninstall(CommandContext<CommandSourceStack> ctx) {
+        AFKDisplay.uninstall();
+        return Command.SINGLE_SUCCESS;
     }
 }

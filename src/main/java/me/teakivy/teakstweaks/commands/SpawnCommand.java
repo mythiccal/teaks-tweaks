@@ -1,12 +1,16 @@
 package me.teakivy.teakstweaks.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import me.teakivy.teakstweaks.TeaksTweaks;
 import me.teakivy.teakstweaks.packs.back.Back;
 import me.teakivy.teakstweaks.utils.ErrorType;
 import me.teakivy.teakstweaks.utils.command.AbstractCommand;
-import me.teakivy.teakstweaks.utils.command.CommandType;
-import me.teakivy.teakstweaks.utils.command.PlayerCommandEvent;
 import me.teakivy.teakstweaks.utils.permission.Permission;
+import me.teakivy.teakstweaks.utils.register.TTCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -16,26 +20,36 @@ import java.util.Objects;
 public class SpawnCommand extends AbstractCommand {
 
     public SpawnCommand() {
-        super(CommandType.PLAYER_ONLY, "spawn", "spawn", Permission.COMMAND_SPAWN);
+        super(TTCommand.SPAWN, "spawn");
 
         setCooldownTime(getPackConfig().getInt("teleport-cooldown"));
     }
 
     @Override
-    public void playerCommand(PlayerCommandEvent event) {
-        if (isOnCooldown()) {
-            sendError("on_cooldown", insert("time", getCooldownTime()));
-            return;
+    public LiteralCommandNode<CommandSourceStack> getCommand() {
+        return Commands.literal("spawn")
+                .requires(perm(Permission.COMMAND_SPAWN))
+                .executes(playerOnly(this::spawn))
+                .build();
+
+    }
+
+    private int spawn(CommandContext<CommandSourceStack> context) {
+        Player player = (Player) context.getSource().getSender();
+        if (isOnCooldown(player)) {
+            player.sendMessage(getError("on_cooldown", insert("time", getCooldownTime())));
+            return Command.SINGLE_SUCCESS;
         }
 
-        teleportToSpawn(event.getPlayer());
-        setCooldown();
+        teleportToSpawn(player);
+        setCooldown(player);
+        return Command.SINGLE_SUCCESS;
     }
 
     private void teleportToSpawn(Player player) {
         World world = Bukkit.getWorld(Objects.requireNonNull(getPackConfig().getString("world")));
         if (world == null) {
-            sendError(ErrorType.UNKNOWN_ERROR);
+            player.sendMessage(ErrorType.UNKNOWN_ERROR.m());
             return;
         }
         int teleportDelay = getPackConfig().getInt("teleport-delay");
@@ -43,10 +57,10 @@ public class SpawnCommand extends AbstractCommand {
         if (teleportDelay <= 0) {
             Back.backLoc.put(player.getUniqueId(), player.getLocation());
             player.teleportAsync(world.getSpawnLocation());
-            sendMessage("teleporting");
+            player.sendMessage(getText("teleporting"));
             return;
         }
-        sendMessage("teleporting_delayed", insert("time", teleportDelay));
+        player.sendMessage(getText("teleporting_delayed", insert("time", teleportDelay)));
         int x = player.getLocation().getBlockX();
         int y = player.getLocation().getBlockY();
         int z = player.getLocation().getBlockZ();

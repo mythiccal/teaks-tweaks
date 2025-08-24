@@ -1,8 +1,8 @@
 package me.teakivy.teakstweaks.packs.homes;
 
 import me.teakivy.teakstweaks.utils.Key;
-import me.teakivy.teakstweaks.utils.lang.Translatable;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.translation.Argument;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -56,13 +56,13 @@ public class Home {
         Player player = Bukkit.getPlayer(owner);
         if (player == null) return;
 
-        if (HomesPack.onCooldown(player)) {
-            player.sendMessage(Translatable.get("homes.error.on_cooldown", Placeholder.parsed("time", HomesPack.getCooldown(player) + "")));
+        if (Homes.onCooldown(player)) {
+            player.sendMessage(Component.translatable("homes.error.on_cooldown", Argument.numeric("time", Homes.getCooldown(player))));
             return;
         }
 
         player.teleportAsync(loc);
-        player.sendMessage(Translatable.get("homes.teleported", Placeholder.parsed("home", name)));
+        player.sendMessage(Component.translatable("homes.teleported", Argument.string("home", name)));
     }
 
     public void delete() {

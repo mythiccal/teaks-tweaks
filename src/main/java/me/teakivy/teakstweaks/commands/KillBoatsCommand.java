@@ -1,13 +1,19 @@
 package me.teakivy.teakstweaks.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import me.teakivy.teakstweaks.utils.command.AbstractCommand;
-import me.teakivy.teakstweaks.utils.command.CommandEvent;
-import me.teakivy.teakstweaks.utils.command.CommandType;
 import me.teakivy.teakstweaks.utils.permission.Permission;
+import me.teakivy.teakstweaks.utils.register.TTCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +21,19 @@ import java.util.List;
 public class KillBoatsCommand extends AbstractCommand {
 
     public KillBoatsCommand() {
-        super(CommandType.ALL, "kill-boats", "killboats", Permission.COMMAND_KILLBOATS);
+        super(TTCommand.KILLBOATS, "killboats");
     }
 
     @Override
-    public void command(CommandEvent event) {
+    public LiteralCommandNode<CommandSourceStack> getCommand() {
+        return Commands.literal("killboats")
+                .requires(perm(Permission.COMMAND_KILLBOATS))
+                .executes(this::killboats)
+                .build();
+    }
+
+    private int killboats(CommandContext<CommandSourceStack> context) {
+        CommandSender sender = context.getSource().getSender();
         List<EntityType> boatTypes = new ArrayList<>();
         for (EntityType value : EntityType.values()) {
             if (value.name().contains("BOAT") || value.name().contains("RAFT")) {
@@ -37,6 +51,7 @@ public class KillBoatsCommand extends AbstractCommand {
             }
         }
 
-        sendMessage("removed_boats", insert("count", boats));
+        sender.sendMessage(getText("removed_boats", insert("count", boats)));
+        return Command.SINGLE_SUCCESS;
     }
 }

@@ -1,125 +1,144 @@
 package me.teakivy.teakstweaks.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import me.teakivy.teakstweaks.packs.homes.Home;
-import me.teakivy.teakstweaks.packs.homes.HomesPack;
-import me.teakivy.teakstweaks.utils.command.*;
+import me.teakivy.teakstweaks.packs.homes.Homes;
+import me.teakivy.teakstweaks.utils.command.AbstractCommand;
 import me.teakivy.teakstweaks.utils.permission.Permission;
+import me.teakivy.teakstweaks.utils.register.TTCommand;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
-
+import java.util.concurrent.CompletableFuture;
 
 public class HomeCommand extends AbstractCommand {
 
     public HomeCommand() {
-        super(CommandType.PLAYER_ONLY, "homes", "home", Permission.COMMAND_HOME, Arg.optional("set", "delete", "home"), Arg.optional("home"));
+        super(TTCommand.HOME, "home");
     }
 
     @Override
-    public void playerCommand(PlayerCommandEvent event) {
-        Player player = event.getPlayer();
-        List<Home> homes = HomesPack.getHomes(player);
+    public LiteralCommandNode<CommandSourceStack> getCommand() {
+        return Commands.literal("home")
+                .requires(perm(Permission.COMMAND_HOME))
+                .executes(ctx -> {
+                    Player player = checkPlayer(ctx);
+                    if (player == null) return Command.SINGLE_SUCCESS;
 
-        if (!event.hasArgs()) {
-            if (homes.isEmpty() && HomesPack.getHome(player, "home") == null) {
-                sendError("no_homes_yet");
-                return;
-            }
+                    tpHome(player, "home");
+                    return Command.SINGLE_SUCCESS;
+                })
+                .then(Commands.argument("name", StringArgumentType.word())
+                        .suggests(this::homeNameSuggestions)
+                        .executes(ctx -> {
+                            Player player = checkPlayer(ctx);
+                            if (player == null) return Command.SINGLE_SUCCESS;
 
-            Home home = HomesPack.getHome(player, "home");
-            if (home == null) {
-                home = homes.get(0);
-            }
+                            String name = StringArgumentType.getString(ctx, "name");
+                            tpHome(player, name);
+                            return Command.SINGLE_SUCCESS;
+                        }))
+                .then(Commands.literal("set")
+                        .requires(perm(Permission.COMMAND_HOME_SET))
+                        .executes(ctx -> {
+                            Player player = checkPlayer(ctx);
+                            if (player == null) return Command.SINGLE_SUCCESS;
 
-            home.teleport();
-            return;
-        }
+                            setHome(player, "home");
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .then(Commands.argument("name", StringArgumentType.word())
+                                .executes(ctx -> {
+                                    Player player = checkPlayer(ctx);
+                                    if (player == null) return Command.SINGLE_SUCCESS;
 
-        if (event.isArg(0, "set")) {
-            if (!event.hasArgs(2) && HomesPack.getHome(player, "home") != null) {
-                sendError("missing_home_name");
-                return;
-            }
-            if (!checkPermission(Permission.COMMAND_HOME_SET)) return;
-            String name = !event.hasArgs(2) ? "home" : event.getArg(1).toLowerCase();
+                                    String name = StringArgumentType.getString(ctx, "name");
+                                    setHome(player, name);
+                                    return Command.SINGLE_SUCCESS;
+                                })))
+                .then(Commands.literal("delete")
+                        .requires(perm(Permission.COMMAND_HOME_DELETE))
+                        .executes(ctx -> {
+                            Player player = checkPlayer(ctx);
+                            if (player == null) return Command.SINGLE_SUCCESS;
 
-            if (HomesPack.getHome(player, name) != null) {
-                sendError("home_already_exists", insert("name", name));
-                return;
-            }
+                            deleteHome(player, "home");
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .then(Commands.argument("name", StringArgumentType.word())
+                                .suggests(this::homeNameSuggestions)
+                                .executes(ctx -> {
+                                    Player player = checkPlayer(ctx);
+                                    if (player == null) return Command.SINGLE_SUCCESS;
 
-            int maxHomes = getPackConfig().getInt("max-homes");
-            if (maxHomes > 0 && homes.size() >= maxHomes) {
-                sendError("max_homes", insert("max_homes", maxHomes));
-                return;
-            }
+                                    String name = StringArgumentType.getString(ctx, "name");
+                                    deleteHome(player, name);
+                                    return Command.SINGLE_SUCCESS;
+                                })))
+                .build();
+    }
 
-            if (HomesPack.setHome(player, name, player.getLocation())) {
-                sendMessage("set_home", insert("name", name));
-            } else {
-                sendError("cant_set_home");
-            }
-
-            return;
-        }
-
-        if (event.isArg(0, "delete")) {
-            if (!event.hasArgs(2) && HomesPack.getHome(player, "home") == null) {
-                sendError("missing_home_name");
-                return;
-            }
-            if (!checkPermission(Permission.COMMAND_HOME_DELETE)) return;
-            String name = !event.hasArgs(2) ? "home" : event.getArg(1).toLowerCase();
-
-            Home home = HomesPack.getHome(player, name);
-            if (home == null) {
-                sendError("home_dne", insert("name", name));
-                return;
-            }
-
-            if (!HomesPack.removeHome(player, name)) {
-                sendError("cant_delete_home");
-                return;
-            }
-            sendMessage("deleted_home", insert("name", name));
-            return;
-        }
-
-        String name = event.getArg(0).toLowerCase();
-
-        Home home = HomesPack.getHome(player, name);
+    public void tpHome(Player player, String name) {
+        if (name == null || name.isEmpty()) name = "home";
+        Home home = Homes.getHome(player, name);
         if (home == null) {
-            sendError("home_dne", insert("name", name));
+            player.sendMessage(getError("home_dne", insert("name", name)));
             return;
         }
 
         home.teleport();
     }
 
-    @Override
-    public List<String> tabComplete(TabCompleteEvent event) {
-        if (event.isArg(0)) {
-            List<String> arguments = new ArrayList<>(List.of("set", "delete"));
-
-            for (Home home : HomesPack.getHomes(event.getPlayer())) {
-                arguments.add(home.getName());
-            }
-            return arguments;
+    public void setHome(Player player, String name) {
+        if (name == null || name.isEmpty()) name = "home";
+        if (Homes.getHome(player, name) != null) {
+            player.sendMessage(getError("home_already_exists", insert("name", name)));
+            return;
         }
 
-        if (event.isArg(1) && event.isArg(0, "delete")) {
-            List<String> homes = new ArrayList<>();
-            for (Home home : HomesPack.getHomes(event.getPlayer())) {
-                homes.add(home.getName());
-            }
-            return homes;
+        List<Home> homes = Homes.getHomes(player);
+        int maxHomes = getPackConfig().getInt("max-homes");
+        if (maxHomes > 0 && homes.size() >= maxHomes) {
+            player.sendMessage(getError("max_homes", insert("max_homes", maxHomes)));
+            return;
         }
 
-        if (event.isArg(1) && event.isArg(0, "set")) {
-            return List.of("[name]");
+        if (!Homes.setHome(player, name, player.getLocation())) {
+            player.sendMessage(getError("cant_set_home"));
+            return;
         }
 
-        return null;
+        player.sendMessage(getText("set_home", insert("name", name)));
+    }
+
+    public void deleteHome(Player player, String name) {
+        if (name == null || name.isEmpty()) name = "home";
+        Home home = Homes.getHome(player, name);
+        if (home == null) {
+            player.sendMessage(getError("home_dne", insert("name", name)));
+            return;
+        }
+
+        if (!Homes.removeHome(player, name)) {
+            player.sendMessage(getError("cant_delete_home"));
+            return;
+        }
+        player.sendMessage(getText("deleted_home", insert("name", name)));
+    }
+
+    public CompletableFuture<Suggestions> homeNameSuggestions(final CommandContext<CommandSourceStack> ctx, final SuggestionsBuilder builder) {
+        builder.restart();
+        if (!(ctx.getSource().getSender() instanceof Player player)) return builder.buildFuture();
+        for (Home home : Homes.getHomes(player)) {
+            if (home.getName().toLowerCase().startsWith(builder.getRemainingLowerCase())) builder.suggest(home.getName());
+        }
+        return builder.buildFuture();
     }
 }

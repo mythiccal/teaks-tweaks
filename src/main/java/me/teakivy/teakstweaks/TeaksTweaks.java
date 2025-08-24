@@ -1,29 +1,31 @@
 package me.teakivy.teakstweaks;
 
 import com.google.gson.Gson;
-import me.teakivy.teakstweaks.craftingtweaks.CraftingRegister;
 import me.teakivy.teakstweaks.utils.*;
+import me.teakivy.teakstweaks.utils.advancements.AdvancementManager;
 import me.teakivy.teakstweaks.utils.config.Config;
 import me.teakivy.teakstweaks.utils.gui.GUIListener;
-import me.teakivy.teakstweaks.utils.lang.Translatable;
+import me.teakivy.teakstweaks.utils.lang.TranslationManager;
 import me.teakivy.teakstweaks.utils.log.Logger;
 import me.teakivy.teakstweaks.utils.metrics.Metrics;
 import me.teakivy.teakstweaks.utils.papi.PAPIExpansion;
 import me.teakivy.teakstweaks.utils.permission.PermissionManager;
 import me.teakivy.teakstweaks.utils.recipe.RecipeManager;
+import me.teakivy.teakstweaks.utils.register.Register;
 import me.teakivy.teakstweaks.utils.update.UpdateChecker;
 import me.teakivy.teakstweaks.utils.update.UpdateJoinAlert;
 import me.teakivy.teakstweaks.utils.update.VersionManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.translation.Argument;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 
 import static me.teakivy.teakstweaks.utils.metrics.CustomMetrics.registerCustomMetrics;
 
@@ -31,7 +33,14 @@ public final class TeaksTweaks extends JavaPlugin implements Listener {
     private final ArrayList<String> activePacks = new ArrayList<>();
     private final ArrayList<String> activeCraftingTweaks = new ArrayList<>();
 
-    private Register register;
+    private TranslationManager translationManager;
+    private AdvancementManager advancementManager;
+
+    @Override
+    public void onLoad() {
+        advancementManager = new AdvancementManager();
+        advancementManager.load();
+    }
 
     /**
      * Called when the plugin is enabled
@@ -51,12 +60,14 @@ public final class TeaksTweaks extends JavaPlugin implements Listener {
         // Initialize & Update Config
         Config.init();
 
-        // Language
-        Translatable.init(getConfig().getString("settings.language"));
+        advancementManager.enable();
+
+        translationManager = new TranslationManager(getDataFolder());
+        translationManager.initialize();
 
         // Update Checker
         if (Config.getBoolean("settings.disable-update-checker")) {
-            Logger.info(Translatable.get("startup.update.disabled"));
+            Logger.info(Component.translatable("startup.update.disabled"));
         } else {
             getServer().getPluginManager().registerEvents(new UpdateJoinAlert(), this);
         }
@@ -66,21 +77,15 @@ public final class TeaksTweaks extends JavaPlugin implements Listener {
 
         Bukkit.getScheduler().runTaskLater(this, UpdateChecker::sendUpdateMessage, 20L * 3);
 
-        // Crafting Tweaks
-        CraftingRegister.init();
-        CraftingRegister.registerAll();
 
         // Commands
-        Register.registerCommands();
+        Register.registerAll();
 
         // Plugin startup logic
         Logger.info(newText(" "));
-        Logger.info(Translatable.get("startup.plugin.started", Placeholder.parsed("version", this.getDescription().getVersion())));
+        Logger.info(Component.translatable("startup.plugin.started", Argument.string("version", this.getDescription().getVersion())));
         Logger.info(newText(" "));
 
-        // Packs
-        register = new Register();
-        register.registerAll();
 
         // Remove legacy data.yml file
         removeDataFile();
@@ -102,7 +107,7 @@ public final class TeaksTweaks extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        Logger.info(Translatable.get("startup.plugin.shutting_down"));
+        Logger.info(Component.translatable("startup.plugin.shutting_down"));
     }
 
     /**
@@ -145,19 +150,19 @@ public final class TeaksTweaks extends JavaPlugin implements Listener {
     }
 
     /**
-     * Get the register instance
-     * @return Register instance
-     */
-    public static Register getRegister() {
-        return TeaksTweaks.getInstance().register;
-    }
-
-    /**
      * Get the main instance
      * @return Main instance
      */
     public static TeaksTweaks getInstance() {
         return getPlugin(TeaksTweaks.class);
+    }
+
+    /**
+     * Get the TranslationManager instance
+     * @return TranslationManager instance
+     */
+    public static TranslationManager getTranslationManager() {
+        return getInstance().translationManager;
     }
 
     /**
@@ -203,4 +208,7 @@ public final class TeaksTweaks extends JavaPlugin implements Listener {
         }
     }
 
+    public static AdvancementManager getAdvancementManager() {
+        return getInstance().advancementManager;
+    }
 }

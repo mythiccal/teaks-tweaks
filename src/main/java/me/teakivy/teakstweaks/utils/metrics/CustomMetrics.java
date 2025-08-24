@@ -1,10 +1,7 @@
 package me.teakivy.teakstweaks.utils.metrics;
 
-import me.teakivy.teakstweaks.TeaksTweaks;
 import me.teakivy.teakstweaks.utils.config.Config;
-import me.teakivy.teakstweaks.utils.lang.Translatable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -27,13 +24,12 @@ public class CustomMetrics {
         registerFirstUsedMetrics(metrics);
         registerDevModeMetrics(metrics);
 
-        metrics.addCustomChart(new Metrics.AdvancedPie("language", new Callable<Map<String, Integer>>() {
+        metrics.addCustomChart(new Metrics.AdvancedPie("server-language", new Callable<Map<String, Integer>>() {
             @Override
             public Map<String, Integer> call() throws Exception {
                 Map<String, Integer> valueMap = new HashMap<>();
                 String languageCode = Config.getLanguage();
                 String language = "Unknown";
-                language = Translatable.getString("meta.language_name");
                 valueMap.put(language + " ( " + languageCode + " )", 1);
 
                 return valueMap;

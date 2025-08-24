@@ -36,19 +36,20 @@ settings:
   # /teakstweaks paste (Permission: teakstweaks.command.teakstweaks.paste)
   send-log-in-paste: true
 
-  # Language
+  # Server Language
   # Change the language of the plugin
+  # Most messages will be shown in the client's language, but some messages will be shown in the server's language.
   # Supported languages:
-  #  - English (en)
-  #  - German (de)
-  #  - French (fr)
-  #  - Russian (ru)
-  #  - Finnish (fl)
-  #  - Polish (pl)
-  #  - Dutch (nl)
+  #  - English (en_US)
+  #  - German (de_DE)
+  #  - French (fr_FR)
+  #  - Russian (ru_RU)
+  #  - Finnish (fi_FI)
+  #  - Polish (pl_PL)
+  #  - Dutch (nl_NL)
   # If you would like to translate the plugin into your language,
   # please contact me on discord! @teakivy (https://discord.gg/wfP4SkZx6s)
-  language: "en"
+  server-language: "en_US"
 
 
 # Packs
@@ -578,7 +579,7 @@ packs:
   # Craft an Empty Music Disc with 8 Iron Ingots and a Diamond.
   # Engrave a music disc with a Stonecutter.
   music-disc-engraver:
-    enabled: true
+    enabled: false
 
   # Nether Portal Coords
   # Adds a command that calculates where a nether portal must be placed in the other dimension. Useful for syncing up nether portals.
@@ -862,6 +863,9 @@ packs:
   track-statistics:
     enabled: false
 
+  transferable-pets:
+    enabled: false
+
   # Unlock All Recipes
   # Automatically unlock all recipes as soon as you start playing.
   #
@@ -933,7 +937,6 @@ packs:
         - Hypnotizd
         - iJevin
         - impulseSV
-        - iskall85
         - JoeHills
         - Keralis
         - MumboJumbo
@@ -941,7 +944,6 @@ packs:
         - Rendog
         - Skizzleman
         - SmallishBeans
-        - Stressmonster101
         - TangoTek
         - VintageBeef
         - Welsknight
@@ -997,6 +999,11 @@ crafting-tweaks:
   charcoal-to-black-dye:
     enabled: false
 
+  # Cheaper Armor Trims Templates
+  # Changes all Armor Trim Template recipes to be cheaper by swapping the diamonds with the material in the center, and the material in the center with a diamond.
+  cheaper-armor-trim-templates:
+    enabled: false
+
   # Cheaper Resin Blocks
   # Allows you to craft Resin Blocks using 4 Resin Clumps instead of 9.
   cheaper-resin-blocks:
@@ -1015,11 +1022,6 @@ crafting-tweaks:
   # Craftable Blackstone
   # Allows you to craft Blackstone or Polished Blackstone using Basalt & Coal/Charcoal
   craftable-blackstone:
-    enabled: false
-
-  # Craftable Bundles
-  # Allows you to craft the experimental bundle item. (Using 1 Leather and 1 String)
-  craftable-bundles:
     enabled: false
 
   # Craftable Chainmail
@@ -1186,6 +1188,6 @@ crafting-tweaks:
 # Leave these options alone unless you know what you're doing.
 # Changing these values may cause unexpected issues!
 config:
-  created-version: 2.0.10_u1-mc1.21.7
-  version: 2.0.10_u1-mc1.21.7
+  created-version: ${version}
+  version: ${version}
   dev-mode: false

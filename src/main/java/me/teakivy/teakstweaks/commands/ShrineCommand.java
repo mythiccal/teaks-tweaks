@@ -1,70 +1,87 @@
 package me.teakivy.teakstweaks.commands;
 
-import me.teakivy.teakstweaks.packs.thundershrine.Shrine;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import me.teakivy.teakstweaks.packs.thundershrine.ThunderShrine;
 import me.teakivy.teakstweaks.utils.command.AbstractCommand;
-import me.teakivy.teakstweaks.utils.command.Arg;
-import me.teakivy.teakstweaks.utils.command.CommandType;
-import me.teakivy.teakstweaks.utils.command.PlayerCommandEvent;
 import me.teakivy.teakstweaks.utils.permission.Permission;
+import me.teakivy.teakstweaks.utils.register.TTCommand;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import java.io.IOException;
 
 public class ShrineCommand extends AbstractCommand {
 
     public ShrineCommand() {
-        super(CommandType.PLAYER_ONLY, "thunder-shrine", "shrine", Permission.COMMAND_SHRINE, Arg.required("create", "remove", "uninstall"));
+        super(TTCommand.SHRINE, "shrine");
     }
 
     @Override
-    public void playerCommand(PlayerCommandEvent event) {
-        if (event.isArg(0, "create")) {
-            if (!checkPermission(Permission.COMMAND_SHRINE_CREATE)) return;
+    public LiteralCommandNode<CommandSourceStack> getCommand() {
+        return Commands.literal("shrine")
+                .requires(perm(Permission.COMMAND_SHRINE))
+                .then(Commands.literal("create")
+                    .requires(perm(Permission.COMMAND_SHRINE_CREATE))
+                    .executes(playerOnly(this::create)))
+                .then(Commands.literal("remove")
+                    .requires(perm(Permission.COMMAND_SHRINE_REMOVE))
+                    .executes(playerOnly(this::remove)))
+                .then(Commands.literal("uninstall")
+                    .requires(perm(Permission.COMMAND_SHRINE_UNINSTALL))
+                    .executes(playerOnly(this::uninstall)))
+                .build();
+    }
 
-            Location loc = event.getPlayer().getLocation();
-            String world = loc.getWorld().getName();
-            int x = loc.getBlockX();
-            int y = loc.getBlockY();
-            int z = loc.getBlockZ();
-            try {
-                Shrine.createShrine(new Location(loc.getWorld(), x, y, z));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+    private int create(CommandContext<CommandSourceStack> context) {
+        Player player = (Player) context.getSource().getSender();
+        Location loc = player.getLocation();
+        String world = loc.getWorld().getName();
+        int x = loc.getBlockX();
+        int y = loc.getBlockY();
+        int z = loc.getBlockZ();
+        try {
+            ThunderShrine.createShrine(new Location(loc.getWorld(), x, y, z));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        player.sendMessage(getText("created", insert("x", x), insert("y", y), insert("z", z), insert("world", world)));
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int remove(CommandContext<CommandSourceStack> context) {
+        Player player = (Player) context.getSource().getSender();
+        Entity shrine = null;
+        for (Entity entity : player.getNearbyEntities(3, 3, 3)) {
+            if (ThunderShrine.getShrines().contains(entity)) {
+                shrine = entity;
             }
-            sendMessage("created", insert("x", x), insert("y", y), insert("z", z), insert("world", world));
         }
 
-        if (event.isArg(0, "remove")) {
-            if (!checkPermission(Permission.COMMAND_SHRINE_REMOVE)) return;
+        if (shrine == null) {
+            player.sendMessage(getError("none_nearby"));
+            return Command.SINGLE_SUCCESS;
+        }
 
-            Entity shrine = null;
-            for (Entity entity : event.getPlayer().getNearbyEntities(3, 3, 3)) {
-                if (Shrine.getShrines().contains(entity)) {
-                    shrine = entity;
-                }
-            }
+        shrine.remove();
+        player.sendMessage(getText("removed",
+                insert("x", shrine.getLocation().getBlockX()),
+                insert("y", shrine.getLocation().getBlockY()),
+                insert("z", shrine.getLocation().getBlockZ()),
+                insert("world", shrine.getLocation().getWorld().getName())));
+        return Command.SINGLE_SUCCESS;
+    }
 
-            if (shrine == null) {
-                sendError("none_nearby");
-                return;
-            }
-
+    private int uninstall(CommandContext<CommandSourceStack> context) {
+        Player player = (Player) context.getSource().getSender();
+        for (Entity shrine : ThunderShrine.getShrines()) {
             shrine.remove();
-            sendMessage("removed",
-                    insert("x", shrine.getLocation().getBlockX()),
-                    insert("y", shrine.getLocation().getBlockY()),
-                    insert("z", shrine.getLocation().getBlockZ()),
-                    insert("world", shrine.getLocation().getWorld().getName()));
         }
-
-        if (event.isArg(0, "uninstall")) {
-            if (!checkPermission(Permission.COMMAND_SHRINE_UNINSTALL)) return;
-
-            for (Entity shrine : Shrine.getShrines()) {
-                shrine.remove();
-            }
-            sendMessage("shrines_mass_removed");
-        }
+        player.sendMessage(getText("shrines_mass_removed"));
+        return Command.SINGLE_SUCCESS;
     }
 }

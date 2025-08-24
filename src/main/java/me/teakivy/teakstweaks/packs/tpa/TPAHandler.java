@@ -1,7 +1,8 @@
 package me.teakivy.teakstweaks.packs.tpa;
 
 import me.teakivy.teakstweaks.TeaksTweaks;
-import me.teakivy.teakstweaks.utils.lang.Translatable;
+import me.teakivy.teakstweaks.utils.config.Config;
+import me.teakivy.teakstweaks.utils.lang.TranslationManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -90,7 +91,7 @@ public class TPAHandler {
     }
 
     private static String getString(String key) {
-        return Translatable.getString("tpa." + key);
+        return TranslationManager.getString(Config.getLanguage(), "tpa." + key);
     }
 
     public static void expireRequest(TPARequest request) {

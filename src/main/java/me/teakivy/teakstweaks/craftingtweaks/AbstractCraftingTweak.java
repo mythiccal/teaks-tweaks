@@ -1,15 +1,15 @@
 package me.teakivy.teakstweaks.craftingtweaks;
 
 import me.teakivy.teakstweaks.TeaksTweaks;
+import me.teakivy.teakstweaks.utils.lang.TranslationManager;
 import me.teakivy.teakstweaks.utils.log.Logger;
 import me.teakivy.teakstweaks.utils.config.Config;
-import me.teakivy.teakstweaks.utils.lang.Translatable;
 import me.teakivy.teakstweaks.utils.metrics.CustomMetrics;
 import me.teakivy.teakstweaks.utils.recipe.RecipeManager;
+import me.teakivy.teakstweaks.utils.register.TTCraftingTweak;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -21,6 +21,7 @@ import java.util.List;
 public abstract class AbstractCraftingTweak {
     private final String name;
     private final String path;
+    private final TTCraftingTweak craftingTweak;
 
     private final Material material;
     private final String description;
@@ -29,25 +30,25 @@ public abstract class AbstractCraftingTweak {
 
     /**
      * Set up the pack
-     * @param path Config path
+     * @param craftingTweak The crafting tweak object
      * @param material Material for the item
      */
-    public AbstractCraftingTweak(String path, Material material) {
+    public AbstractCraftingTweak(TTCraftingTweak craftingTweak, Material material) {
+        this.craftingTweak = craftingTweak;
+        this.path = craftingTweak.getKey();
         String langKey = path.replaceAll("-", "_");
-        this.name = Translatable.getString(langKey + ".name");
-        this.path = path;
+        this.name = TranslationManager.getString(Config.getLanguage(), langKey + ".name");
 
         this.material = material;
-        this.description = Translatable.getString(langKey + ".description");
+        this.description = TranslationManager.getString(Config.getLanguage(), langKey + ".description");
     }
 
     /**
      * Initialize all recipes for the pack
      */
     public void init() {
-        Logger.info(Translatable.get("startup.register.crafting_tweak", Placeholder.parsed("name", "<gold>" + name)));
+        Logger.info(Component.text(TranslationManager.getString(Config.getLanguage(), "startup.register.crafting_tweak").replace("<name>", name)));
         TeaksTweaks.getInstance().addCraftingTweaks(this.name);
-        CraftingRegister.addEnabledRecipe(this);
         this.registerRecipes();
 
         item = new ItemStack(material);
@@ -79,7 +80,7 @@ public abstract class AbstractCraftingTweak {
      * Register the pack
      */
     public void register() {
-        if (Config.isCraftingTweakEnabled(path)) init();
+        if (Config.isCraftingTweakEnabled(path) || Config.isDevMode()) init();
     }
 
     public void unregister() {
@@ -101,6 +102,10 @@ public abstract class AbstractCraftingTweak {
      */
     public ItemStack getItem() {
         return item;
+    }
+
+    public TTCraftingTweak getCraftingTweak() {
+        return craftingTweak;
     }
 
 }

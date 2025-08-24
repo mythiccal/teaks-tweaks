@@ -1,54 +1,41 @@
 package me.teakivy.teakstweaks.commands;
 
-import me.teakivy.teakstweaks.packs.homes.Home;
-import me.teakivy.teakstweaks.packs.homes.HomesPack;
-import me.teakivy.teakstweaks.utils.command.*;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import me.teakivy.teakstweaks.utils.command.AbstractCommand;
 import me.teakivy.teakstweaks.utils.permission.Permission;
+import me.teakivy.teakstweaks.utils.register.TTCommand;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 public class SetHomeCommand extends AbstractCommand {
 
     public SetHomeCommand() {
-        super(CommandType.PLAYER_ONLY, "homes", "sethome", Permission.COMMAND_HOME_SET, "home",  Arg.optional("name"));
+        super(TTCommand.SETHOME, "home");
     }
 
     @Override
-    public void playerCommand(PlayerCommandEvent event) {
-        Player player = event.getPlayer();
-        List<Home> homes = HomesPack.getHomes(player);
+    public LiteralCommandNode<CommandSourceStack> getCommand() {
+        return Commands.literal("sethome")
+                .requires(perm(Permission.COMMAND_HOME_SET))
+                .executes(ctx -> {
+                    Player player = checkPlayer(ctx);
+                    if (player == null) return Command.SINGLE_SUCCESS;
 
-        if (!event.hasArgs() && HomesPack.getHome(player, "home") != null) {
-            sendError("missing_home_name");
-            return;
-        }
+                    new HomeCommand().setHome(player, "home");
+                    return Command.SINGLE_SUCCESS;
+                })
+                .then(Commands.argument("name", StringArgumentType.word())
+                        .executes(ctx -> {
+                            Player player = checkPlayer(ctx);
+                            if (player == null) return Command.SINGLE_SUCCESS;
 
-        String name = !event.hasArgs() ? "home" : event.getArg(0).toLowerCase();
-
-        if (HomesPack.getHome(player, name) != null) {
-            sendError("home_already_exists", insert("name", name));
-            return;
-        }
-
-        int maxHomes = getPackConfig().getInt("max-homes");
-        if (maxHomes > 0 && homes.size() >= maxHomes) {
-            sendError("max_homes", insert("max_homes", maxHomes));
-            return;
-        }
-
-        if (!HomesPack.setHome(player, name, player.getLocation())) {
-            sendError("cant_set_home");
-            return;
-        }
-
-        sendMessage("set_home", insert("name", name));
-    }
-
-    @Override
-    public List<String> tabComplete(TabCompleteEvent event) {
-        if (!event.isArgsSize(1)) return null;
-
-        return List.of("[name]");
+                            String name = StringArgumentType.getString(ctx, "name");
+                            new HomeCommand().setHome(player, name);
+                            return Command.SINGLE_SUCCESS;
+                        }))
+                .build();
     }
 }

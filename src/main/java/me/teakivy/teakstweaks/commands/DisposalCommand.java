@@ -1,9 +1,14 @@
 package me.teakivy.teakstweaks.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import me.teakivy.teakstweaks.utils.command.AbstractCommand;
-import me.teakivy.teakstweaks.utils.command.CommandType;
-import me.teakivy.teakstweaks.utils.command.PlayerCommandEvent;
 import me.teakivy.teakstweaks.utils.permission.Permission;
+import me.teakivy.teakstweaks.utils.register.TTCommand;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -12,16 +17,20 @@ import java.util.List;
 public class DisposalCommand extends AbstractCommand {
 
     public DisposalCommand() {
-        super(CommandType.PLAYER_ONLY, "disposal", "disposal", Permission.COMMAND_DISPOSAL, List.of("trash", "bin", "garbage", "rubbish"));
+        super(TTCommand.DISPOSAL, "disposal", List.of("trash", "bin", "garbage", "rubbish"));
     }
 
     @Override
-    public void playerCommand(PlayerCommandEvent event) {
-        Player player = event.getPlayer();
-        player.openInventory(
-                Bukkit.createInventory(
-                        null, 27, "Disposal"
-                )
-        );
+    public LiteralCommandNode<CommandSourceStack> getCommand() {
+        return Commands.literal("disposal")
+                .requires(perm(Permission.COMMAND_DISPOSAL))
+                .executes(playerOnly(this::disposal))
+                .build();
+    }
+
+    private int disposal(CommandContext<CommandSourceStack> context) {
+        Player player = (Player) context.getSource().getSender();
+        player.openInventory(Bukkit.createInventory(null, 27, Component.text("Disposal")));
+        return Command.SINGLE_SUCCESS;
     }
 }

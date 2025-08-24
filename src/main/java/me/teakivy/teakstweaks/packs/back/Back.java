@@ -2,8 +2,9 @@ package me.teakivy.teakstweaks.packs.back;
 
 import me.teakivy.teakstweaks.packs.BasePack;
 import me.teakivy.teakstweaks.utils.ErrorType;
-import me.teakivy.teakstweaks.utils.lang.Translatable;
 import me.teakivy.teakstweaks.utils.permission.Permission;
+import me.teakivy.teakstweaks.utils.register.TTPack;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,7 +19,7 @@ import java.util.UUID;
 public class Back extends BasePack {
 
     public Back() {
-        super("back", Material.REDSTONE_TORCH);
+        super(TTPack.BACK, Material.REDSTONE_TORCH);
     }
 
     public static HashMap<UUID, Location> backLoc = new HashMap<>();
@@ -31,7 +32,7 @@ public class Back extends BasePack {
         if (backLoc.containsKey(player.getUniqueId())) {
             player.teleportAsync(backLoc.get(player.getUniqueId()));
         } else {
-            player.sendMessage(Translatable.get("back.error.no_back_location"));
+            player.sendMessage(Component.translatable("back.error.no_back_location"));
         }
     }
 

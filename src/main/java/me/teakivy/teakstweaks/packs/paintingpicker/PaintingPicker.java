@@ -5,6 +5,7 @@ import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import me.teakivy.teakstweaks.packs.BasePack;
 import me.teakivy.teakstweaks.utils.Key;
+import me.teakivy.teakstweaks.utils.register.TTPack;
 import org.bukkit.Art;
 import org.bukkit.Material;
 import org.bukkit.Registry;
@@ -31,7 +32,7 @@ public class PaintingPicker extends BasePack {
     }
 
     public PaintingPicker() {
-        super("painting-picker", Material.PAINTING);
+        super(TTPack.PAINTING_PICKER, Material.PAINTING);
     }
 
     @EventHandler
@@ -51,7 +52,6 @@ public class PaintingPicker extends BasePack {
         addRecipe(recipe);
 
         for (Art art : registry) {
-            System.out.println(art);
             String name = art.toString();
             ItemStack item = ItemStack.of(Material.PAINTING);
             item.setData(DataComponentTypes.PAINTING_VARIANT, art);
