@@ -56,6 +56,12 @@ public class ArmoredElytra extends BasePack {
 
                     Item item = (Item) entity;
                     if (item.getItemStack().getType() != Material.ELYTRA) continue;
+                    // Prevent re-combining an already armored elytra to avoid NBT/enchant stacking
+                    ItemStack elytraStack = item.getItemStack();
+                    if (elytraStack.hasItemMeta() &&
+                            elytraStack.getItemMeta().getPersistentDataContainer().has(Key.get("armored_elytra"), PersistentDataType.STRING)) {
+                        continue;
+                    }
                     if (itemDrop.isDead() || item.isDead()) continue;
 
                     item.remove();
