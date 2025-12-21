@@ -82,7 +82,21 @@ public class ArmoredElytra extends BasePack {
     }
 
     private Material getBlockBelow(Location location) {
-        return location.add(0, -1, 0).getBlock().getType();
+        // Avoid loading chunks just to check the block type
+        World world = location.getWorld();
+        if (world == null) return Material.AIR;
+
+        int x = location.getBlockX();
+        int y = location.getBlockY() - 1;
+        int z = location.getBlockZ();
+
+        if (y < world.getMinHeight() || y >= world.getMaxHeight()) return Material.AIR;
+
+        int chunkX = x >> 4;
+        int chunkZ = z >> 4;
+        if (!world.isChunkLoaded(chunkX, chunkZ)) return Material.AIR;
+
+        return world.getBlockAt(x, y, z).getType();
     }
 
     @EventHandler
@@ -94,7 +108,7 @@ public class ArmoredElytra extends BasePack {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (event.getItemDrop().getLocation().add(0, -1, 0).getBlock().getType().equals(Material.GRINDSTONE)) {
+                if (getBlockBelow(event.getItemDrop().getLocation()).equals(Material.GRINDSTONE)) {
                     Item item = event.getItemDrop();
 //                    item.remove();
                     item.getWorld().spawnParticle(Particle.FLAME, item.getLocation(), 100, 0, 0, 0, .5);

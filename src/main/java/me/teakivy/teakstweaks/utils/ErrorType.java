@@ -2,6 +2,7 @@ package me.teakivy.teakstweaks.utils;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.translation.GlobalTranslator;
 
 public enum ErrorType {
     UNKNOWN_ERROR(Component.translatable("error.unknown")),
@@ -27,7 +28,15 @@ public enum ErrorType {
      * @return The error message
      */
     public Component m() {
-        return text;
+        // Render against server language for console contexts
+        String lang = me.teakivy.teakstweaks.utils.config.Config.getLanguage();
+        String norm = lang.replace('-', '_');
+        String[] parts = norm.split("_");
+        String language = parts[0].toLowerCase(java.util.Locale.ROOT);
+        String country = (parts.length > 1) ? parts[1] : "";
+        java.util.Locale locale = country.isEmpty() ? new java.util.Locale(language) : new java.util.Locale(language, country.toUpperCase(java.util.Locale.ROOT));
+        Component resolved = GlobalTranslator.render(text, locale);
+        return resolved == null ? text : resolved;
     }
 
     /**
