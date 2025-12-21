@@ -87,6 +87,7 @@ public class HomeCommand extends AbstractCommand {
 
     public void tpHome(Player player, String name) {
         if (name == null || name.isEmpty()) name = "home";
+
         Home home = Homes.getHome(player, name);
         if (home == null) {
             player.sendMessage(getError("home_dne", insert("name", name)));

@@ -94,49 +94,6 @@ packs:
   always-active-beacons:
     enabled: false
 
-  # Always Drop
-  # Allows you to set blocks that will always drop when broken, regardless of the tool or enchantments used.
-  always-drop:
-    enabled: false
-    # Blocks that will always drop when broken
-    blocks:
-      - ender_chest
-      - glass
-      - tinted_glass
-      - white_stained_glass
-      - light_gray_stained_glass
-      - gray_stained_glass
-      - black_stained_glass
-      - brown_stained_glass
-      - red_stained_glass
-      - orange_stained_glass
-      - yellow_stained_glass
-      - lime_stained_glass
-      - green_stained_glass
-      - cyan_stained_glass
-      - light_blue_stained_glass
-      - blue_stained_glass
-      - purple_stained_glass
-      - magenta_stained_glass
-      - pink_stained_glass
-      - glass_pane
-      - white_stained_glass_pane
-      - light_gray_stained_glass_pane
-      - gray_stained_glass_pane
-      - black_stained_glass_pane
-      - brown_stained_glass_pane
-      - red_stained_glass_pane
-      - orange_stained_glass_pane
-      - yellow_stained_glass_pane
-      - lime_stained_glass_pane
-      - green_stained_glass_pane
-      - cyan_stained_glass_pane
-      - light_blue_stained_glass_pane
-      - blue_stained_glass_pane
-      - purple_stained_glass_pane
-      - magenta_stained_glass_pane
-      - pink_stained_glass_pane
-
   # Anti Creeper Grief
   # Prevents creepers from blowing up, blocks and players do not take damage.
   anti-creeper-grief:
@@ -181,6 +138,19 @@ packs:
     # Enter the number of seconds required to wait before teleporting
     teleport-delay: 0
 
+  # Back To Bed
+  # Enter '/bed' to teleport to your most recent respawn point.
+  back-to-bed:
+    enabled: false
+    # Whether or not the player will be teleported to the world spawn if they have no spawn point.
+    to-spawn: true
+    # Name of the world to teleport to the spawn of (ex: 'world', 'world_nether', 'world_the_end', etc)
+    world: world
+    # Enter the number of seconds required to wait between uses of the bed command
+    teleport-cooldown: 0
+    # Enter the number of seconds required to wait before teleporting
+    teleport-delay: 0
+
   # Bat Membranes
   # Disable Phantoms to get membranes from Bats instead.
   bat-membranes:
@@ -196,6 +166,14 @@ packs:
     # Whether or not hardening takes a water level from the cauldron
     drops-water-level: true
 
+
+  # Cauldron Copper
+  # Adds 2 new types of cauldrons.
+  # Slime Cauldron - Filled with Slime Blocks, can be used to age Copper items.
+  # Honey Cauldron - Filled with Honey Blocks, can be used to bulk wax Copper items.
+  cauldron-copper:
+    enabled: false
+
   # Cauldron Mud
   # Right click a water cauldron with dirt to turn it into mud.
   #
@@ -205,6 +183,16 @@ packs:
     enabled: false
     # Whether or not converting the mud takes a water level from the cauldron
     drops-water-level: true
+
+  # Cauldron Potions
+  # Right click an empty cauldron with a potion to fill it.
+  # Right click the cauldron with a glass bottle to get the potion.
+  # Right click the cauldron with arrows to make tipped arrows.
+  #
+  # Permissions:
+    # teakstweaks.cauldron-potions
+  cauldron-potions:
+    enabled: false
 
   # Chat Colors
   # Use Chat Colors to make your messages, signs, and items look better (Using '&' for color codes)
@@ -236,12 +224,55 @@ packs:
   classic-fishing-loot:
     enabled: false
 
-  # Collectible Budding Amethyst
-  # Allows you to collect budding amethyst blocks to get the block itself.
-  collectible-budding-amethyst:
+  # Collectible Blocks
+  # Allows you to configure blocks that can be collected in ways they normally can't be in vanilla Minecraft.
+  collectible-blocks:
     enabled: false
-    # Whether or not silk touch is required to collect budding amethyst blocks
-    require-silk-touch: true
+    # Makes specified blocks always drop when broken, regardless of the tool used.
+    always-drop:
+      enabled: false
+      blocks:
+        - ender_chest
+        - glass
+        - tinted_glass
+        - white_stained_glass
+        - light_gray_stained_glass
+        - gray_stained_glass
+        - black_stained_glass
+        - brown_stained_glass
+        - red_stained_glass
+        - orange_stained_glass
+        - yellow_stained_glass
+        - lime_stained_glass
+        - green_stained_glass
+        - cyan_stained_glass
+        - light_blue_stained_glass
+        - blue_stained_glass
+        - purple_stained_glass
+        - magenta_stained_glass
+        - pink_stained_glass
+        - glass_pane
+        - white_stained_glass_pane
+        - light_gray_stained_glass_pane
+        - gray_stained_glass_pane
+        - black_stained_glass_pane
+        - brown_stained_glass_pane
+        - red_stained_glass_pane
+        - orange_stained_glass_pane
+        - yellow_stained_glass_pane
+        - lime_stained_glass_pane
+        - green_stained_glass_pane
+        - cyan_stained_glass_pane
+        - light_blue_stained_glass_pane
+        - blue_stained_glass_pane
+        - purple_stained_glass_pane
+        - magenta_stained_glass_pane
+        - pink_stained_glass_pane
+    # Makes specified blocks drop only when broken with a tool that has the Silk Touch enchantment.
+    silk-touch-drop:
+      enabled: false
+      blocks:
+        - budding_amethyst
 
   # Confetti Creepers
   # There is a chance each creeper will explode into confetti and do no damage to blocks.
@@ -319,6 +350,9 @@ packs:
   # /disposal (Permission: teakstweaks.command.disposal)
   disposal:
     enabled: false
+    # Amount of rows in the disposal screen
+    # Must be between [1, 6]
+    size: 1
 
   # Double Shulker Shells
   # Makes all shulkers drop 2 shells.
@@ -465,6 +499,43 @@ packs:
     level-threshold: 0
     # Whether or not to allow graves to be placed in water, if false, graves will generate on the surface of the water (or the next clear space above the water)
     allow-water-graves: true
+    # Whether or not to split the armored elytra item when a grave generates
+    split-armored-elytra: true
+
+  # Harder End Progression
+  # Changes the crafting recipe for Eyes of Ender to make progression harder and slower.
+  # Has varying levels of difficulty as shown below with an option to tweak the chance
+  # that the eye will break if thrown.
+  harder-end-progression:
+    enabled: false
+    # Items needed to craft an Eye of Ender
+    # Level 0
+    #   - Blaze Powder
+    #   - Ender Pearl (Vanilla Recipe)
+    # Level 1 -
+    #   - Blaze Powder
+    #   - Ender Pearl
+    #   - Wind Charge
+    # Level 2
+    #   - Phantom Membrane
+    #   - Blaze Powder
+    #   - Ender Pearl
+    #   - Wind Charge
+    #   - Amethyst Shard
+    # Level 3
+    #   - Prismarine Shard
+    #   - Phantom Membrane
+    #   - Blaze Powder
+    #   - Wind Charge
+    #   - Amethyst Shard
+    #   - Ghast Tear
+    #   - Resin Clump
+    #   - Echo Shard
+    difficulty-level: 1
+    # Change the Eye will break when used from 0-100.
+    #     0   - Will never break
+    #     100 - will break every time
+    break-chance: 20
 
   # Homes
   # Allows you to set homes ('/home set <name>') and teleport back to them ('/home <name>')
@@ -487,6 +558,15 @@ packs:
   # With Looting, the amount is up to 2 + the Looting level.
   husk-drops-sand:
     enabled: false
+
+  # Infested Villagers
+  # Villagers with the infested effect will transform into a zombie villager after 2-5 minutes.
+  infested-villagers:
+    enabled: false
+    # Minimum time (in seconds) for a villager to transform
+    min-time: 120
+    # Maximum time (in seconds) for a villager to transform
+    max-time: 300
 
   # Insta Mine
   # Instantly mine certain blocks if you have a netherite tool with efficiency 5 or higher, and haste 2 or higher.
@@ -681,6 +761,12 @@ packs:
     # Commands:
     # /smithingtable (Permission: teakstweaks.command.smithingtable)
     smithingtable: true
+    # Stonecutter command
+    # Opens a Stonecutter
+    #
+    # Commands:
+    # /stonecutter (Permission: teakstweaks.command.stonecutter)
+    stonecutter: true
 
 
   # Real Time Clock
@@ -807,6 +893,13 @@ packs:
   stair-chairs:
     enabled: false
 
+  # Storm Channeling
+  # Throw a channeling Trident to the skies to summon a thunderstorm.
+  # Doing this takes 150 durability from the Trident.
+  # This effect is immune to unbreaking.
+  storm-channeling:
+    enabled: false
+
   # Sudoku
   # Allow players to commit sudoku
   #
@@ -863,6 +956,8 @@ packs:
   track-statistics:
     enabled: false
 
+  # Transferable Pets
+  # Right click a player with leads attached to a tamed pet to transfer ownership of the pet to that player.
   transferable-pets:
     enabled: false
 
@@ -881,6 +976,14 @@ packs:
   # Permissions:
   # teakstweaks.unsticky-pistons
   unsticky-pistons:
+    enabled: false
+
+  # Unwax Signs
+  # Allow players to remove wax from waxed signs by right-clicking them with an axe while crouching/sneaking
+  #
+  # Permissions:
+  # teakstweaks.unwax-signs
+  unwax-signs:
     enabled: false
 
   # Villager Death Messages
@@ -1027,6 +1130,11 @@ crafting-tweaks:
   # Craftable Chainmail
   # Allows you to craft Chainmail Armor using Chains.
   craftable-chainmail:
+    enabled: false
+
+  # Craftable Copper Golem Statues
+  # Allows you to craft a copper golem with a carved pumpkin and a copper ingot.
+  craftable-copper-golem-statues:
     enabled: false
 
   # Craftable Coral Blocks (2x2)

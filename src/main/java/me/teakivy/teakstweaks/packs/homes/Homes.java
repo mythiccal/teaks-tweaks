@@ -144,6 +144,7 @@ public class Homes extends BasePack {
 
     private static boolean checkName(String name) {
         char[] allowedChars = "abcdefghijklmnopqrstuvwxyz1234567890_-".toCharArray();
+        if (name.equalsIgnoreCase("bed")) return false;
         for (char c : name.toCharArray()) {
             boolean allowed = false;
             for (char allowedChar : allowedChars) {

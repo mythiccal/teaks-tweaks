@@ -5,7 +5,10 @@ import me.teakivy.teakstweaks.utils.dialog.DialogUtils;
 import me.teakivy.teakstweaks.utils.register.TTPack;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Fox;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -20,7 +23,7 @@ public class TransferablePets extends BasePack implements Listener {
     }
 
     @EventHandler
-    public void test(PlayerInteractAtEntityEvent event) {
+    public void onInteract(PlayerInteractAtEntityEvent event) {
         if (!(event.getRightClicked() instanceof Player target)) return;
         Player player = event.getPlayer();
         if (!player.isSneaking()) return;
@@ -34,13 +37,14 @@ public class TransferablePets extends BasePack implements Listener {
             }
         }
 
+        if (pets.isEmpty()) return;
         DialogUtils.showConfirmation(player, Component.text("You’re about to share the lead and pass ownership of your animal to " + target.getName() + ". Are you sure you want to do this?"), (r, aud) -> {
             for (LivingEntity pet : pets) {
                 if (!pet.isLeashed()) continue;
                 pet.setLeashHolder(target);
 
-                if (pet instanceof Tameable) {
-                    ((Tameable) pet).setOwner(target);
+                if (pet instanceof Tameable tameable && player.getUniqueId().equals(tameable.getOwnerUniqueId())) {
+                    tameable.setOwner(target);
                 }
 
                 if (pet instanceof Fox fox) {
@@ -53,8 +57,6 @@ public class TransferablePets extends BasePack implements Listener {
                 }
             }
         }, (r, aud) -> {
-
         });
-
     }
 }

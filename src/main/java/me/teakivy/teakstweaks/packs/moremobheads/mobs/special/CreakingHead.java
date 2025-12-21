@@ -2,7 +2,9 @@ package me.teakivy.teakstweaks.packs.moremobheads.mobs.special;
 
 import me.teakivy.teakstweaks.TeaksTweaks;
 import me.teakivy.teakstweaks.packs.moremobheads.MoreMobHeads;
+import me.teakivy.teakstweaks.packs.moremobheads.abstractions.SpecialMobHead;
 import me.teakivy.teakstweaks.packs.moremobheads.types.TexturedHead;
+import me.teakivy.teakstweaks.utils.customitems.CustomItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -12,14 +14,20 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class CreakingHead implements Listener {
+public class CreakingHead extends SpecialMobHead {
 
     public CreakingHead() {
         TeaksTweaks.getInstance().getServer().getPluginManager().registerEvents(this, TeaksTweaks.getInstance());
+    }
+
+    @Override
+    protected void playerKillEvent(EntityDeathEvent event) {
+        // Do nothing
     }
 
     @EventHandler
@@ -43,7 +51,11 @@ public class CreakingHead implements Listener {
             if (!MoreMobHeads.shouldDrop(event.getPlayer(), "creaking")) return;
             ItemStack headItem = MoreMobHeads.getHeadItem("creaking", Sound.BLOCK_CREAKING_HEART_SPAWN);
             finalCreaking.getWorld().dropItemNaturally(finalCreaking.getLocation(), headItem);
-            MoreMobHeads.grant(event.getPlayer(), "creaking");
         }, 50L);
+    }
+
+    protected void register() {
+        super.register();
+        new CustomItem("creaking_head", MoreMobHeads.getHeadItem("creaking", Sound.BLOCK_CREAKING_HEART_SPAWN)).register();
     }
 }

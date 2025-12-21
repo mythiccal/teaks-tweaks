@@ -5,9 +5,12 @@ import me.teakivy.teakstweaks.packs.BasePack;
 import me.teakivy.teakstweaks.utils.Base64Serializer;
 import me.teakivy.teakstweaks.utils.ItemSerializer;
 import me.teakivy.teakstweaks.utils.Key;
+import me.teakivy.teakstweaks.utils.config.Config;
+import me.teakivy.teakstweaks.utils.lang.TranslationManager;
 import me.teakivy.teakstweaks.utils.permission.Permission;
 import me.teakivy.teakstweaks.utils.register.TTPack;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -159,7 +162,7 @@ public class ArmoredElytra extends BasePack {
 
         HashMap<Enchantment, Integer> enchantmentStorage = new HashMap<>();
 
-        Component name = getText("item_name");
+        Component name = MiniMessage.miniMessage().deserialize(TranslationManager.getString(Config.getLanguage(), "armored_elytra.item_name"));
         if (chestplate.hasItemMeta()) {
             if (chestplate.getItemMeta().hasDisplayName()) {
                 name = chestplate.getItemMeta().displayName();
@@ -213,6 +216,7 @@ public class ArmoredElytra extends BasePack {
         double knockbackResistance = 0;
 
         if (chestplate.getType() == Material.LEATHER_CHESTPLATE) armor = 3;
+        if (chestplate.getType() == Material.COPPER_CHESTPLATE) armor = 4;
         if (chestplate.getType() == Material.CHAINMAIL_CHESTPLATE) armor = 5;
         if (chestplate.getType() == Material.IRON_CHESTPLATE) armor = 6;
         if (chestplate.getType() == Material.GOLDEN_CHESTPLATE) armor = 5;
