@@ -107,9 +107,9 @@ public class TranslationManager {
 
         for (String lang : supportedLanguages) {
             String[] parts = lang.split("_");
-            String language = parts[0];
-            String country = parts[1];
-            Locale locale = new Locale(language, country);
+            String language = parts[0].toLowerCase(Locale.ROOT);
+            String country = parts.length > 1 ? parts[1].toUpperCase(Locale.ROOT) : "";
+            Locale normalizedLocale = country.isEmpty() ? new Locale(language) : new Locale(language, country);
 
             File translationFile = new File(translationsFolder, lang + ".properties");
             if (!translationFile.exists()) {
@@ -131,8 +131,9 @@ public class TranslationManager {
                 map.put(key, properties.getProperty(key));
             }
 
-            store.registerAll(locale, map);
-            Logger.info(Component.text("Loaded translations for " + lang));
+            // Register once per normalized locale to avoid duplicate key exceptions
+            store.registerAll(normalizedLocale, map);
+            Logger.info(Component.text("Loaded translations for " + normalizedLocale.toString()));
         }
 
         GlobalTranslator.translator().addSource(store);
@@ -194,10 +195,11 @@ public class TranslationManager {
         }
 
         // Normalize locale name, e.g. "en_us" -> "en", "US"
-        String[] parts = localeName.split("_");
-        String language = parts[0];
+        String norm = localeName.replace('-', '_');
+        String[] parts = norm.split("_");
+        String language = parts[0].toLowerCase(Locale.ROOT);
         String country = (parts.length > 1) ? parts[1] : "";
-        Locale locale = new Locale(language, country);
+        Locale locale = country.isEmpty() ? new Locale(language) : new Locale(language, country.toUpperCase(Locale.ROOT));
 
         // Create a translatable component
         TranslatableComponent translatable = Component.translatable(key);

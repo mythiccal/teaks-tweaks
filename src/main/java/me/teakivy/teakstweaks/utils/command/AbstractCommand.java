@@ -16,6 +16,7 @@ import me.teakivy.teakstweaks.utils.register.TTCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.minimessage.translation.Argument;
+import net.kyori.adventure.translation.GlobalTranslator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -115,7 +116,15 @@ public abstract class AbstractCommand {
      * @return The translated component
      */
     public Component getText(String key, ComponentLike... args) {
-        return Component.translatable(translationKey + "." + key, args);
+        Component translatable = Component.translatable(translationKey + "." + key, args);
+        String lang = Config.getLanguage();
+        String norm = lang.replace('-', '_');
+        String[] parts = norm.split("_");
+        String language = parts[0].toLowerCase(java.util.Locale.ROOT);
+        String country = (parts.length > 1) ? parts[1] : "";
+        java.util.Locale locale = country.isEmpty() ? new java.util.Locale(language) : new java.util.Locale(language, country.toUpperCase(java.util.Locale.ROOT));
+        Component resolved = GlobalTranslator.render(translatable, locale);
+        return resolved == null ? translatable : resolved;
     }
 
     /**
@@ -125,11 +134,27 @@ public abstract class AbstractCommand {
      * @return The translated component
      */
     public Component getError(String key, ComponentLike... args) {
-        return Component.translatable(translationKey + ".error." + key, args);
+        Component translatable = Component.translatable(translationKey + ".error." + key, args);
+        String lang = Config.getLanguage();
+        String norm = lang.replace('-', '_');
+        String[] parts = norm.split("_");
+        String language = parts[0].toLowerCase(java.util.Locale.ROOT);
+        String country = (parts.length > 1) ? parts[1] : "";
+        java.util.Locale locale = country.isEmpty() ? new java.util.Locale(language) : new java.util.Locale(language, country.toUpperCase(java.util.Locale.ROOT));
+        Component resolved = GlobalTranslator.render(translatable, locale);
+        return resolved == null ? translatable : resolved;
     }
 
     public Component get(String key, ComponentLike... args) {
-        return Component.translatable(key, args);
+        Component translatable = Component.translatable(key, args);
+        String lang = Config.getLanguage();
+        String norm = lang.replace('-', '_');
+        String[] parts = norm.split("_");
+        String language = parts[0].toLowerCase(java.util.Locale.ROOT);
+        String country = (parts.length > 1) ? parts[1] : "";
+        java.util.Locale locale = country.isEmpty() ? new java.util.Locale(language) : new java.util.Locale(language, country.toUpperCase(java.util.Locale.ROOT));
+        Component resolved = GlobalTranslator.render(translatable, locale);
+        return resolved == null ? translatable : resolved;
     }
 
     /**

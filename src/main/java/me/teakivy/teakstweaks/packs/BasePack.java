@@ -14,6 +14,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.translation.Argument;
+import net.kyori.adventure.translation.GlobalTranslator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -214,7 +215,15 @@ public class BasePack implements Listener {
 	}
 
 	protected Component getText(String key, ComponentLike... resolvers) {
-		return Component.translatable(translatableKey + "." + key, resolvers);
+		Component translatable = Component.translatable(translatableKey + "." + key, resolvers);
+		String lang = Config.getLanguage();
+		String norm = lang.replace('-', '_');
+		String[] parts = norm.split("_");
+		String language = parts[0].toLowerCase(java.util.Locale.ROOT);
+		String country = (parts.length > 1) ? parts[1] : "";
+		java.util.Locale locale = country.isEmpty() ? new java.util.Locale(language) : new java.util.Locale(language, country.toUpperCase(java.util.Locale.ROOT));
+		Component resolved = GlobalTranslator.render(translatable, locale);
+		return resolved == null ? translatable : resolved;
 	}
 
 

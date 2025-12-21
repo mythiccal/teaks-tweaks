@@ -1,11 +1,13 @@
 package me.teakivy.teakstweaks.packs.durabilityping;
 
+import com.destroystokyo.paper.ClientOption;
 import me.teakivy.teakstweaks.packs.BasePack;
 import me.teakivy.teakstweaks.utils.config.Config;
 import me.teakivy.teakstweaks.utils.permission.Permission;
 import me.teakivy.teakstweaks.utils.register.TTPack;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.TitlePart;
+import net.kyori.adventure.translation.GlobalTranslator;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -104,23 +106,34 @@ public class DurabilityPing extends BasePack {
         }
         if (style.equalsIgnoreCase("hidden")) return;
         if (style.equalsIgnoreCase("subtitle")) {
-            player.sendTitlePart(TitlePart.TITLE, getDurabilityMessage("ping.subtitle.title", item, durability, maxDurability));
-            player.sendTitlePart(TitlePart.SUBTITLE, getDurabilityMessage("ping.subtitle.subtitle", item, durability, maxDurability));
+            player.sendTitlePart(TitlePart.TITLE, getDurabilityMessage(player, "ping.subtitle.title", item, durability, maxDurability));
+            player.sendTitlePart(TitlePart.SUBTITLE, getDurabilityMessage(player, "ping.subtitle.subtitle", item, durability, maxDurability));
         }
         if (style.equalsIgnoreCase("title")) {
-            player.sendTitlePart(TitlePart.TITLE, getDurabilityMessage("ping.title.title", item, durability, maxDurability));
-            player.sendTitlePart(TitlePart.SUBTITLE, getDurabilityMessage("ping.title.subtitle", item, durability, maxDurability));
+            player.sendTitlePart(TitlePart.TITLE, getDurabilityMessage(player, "ping.title.title", item, durability, maxDurability));
+            player.sendTitlePart(TitlePart.SUBTITLE, getDurabilityMessage(player, "ping.title.subtitle", item, durability, maxDurability));
         }
         if (style.equalsIgnoreCase("chat")) {
-            player.sendMessage(getDurabilityMessage("ping.chat.message", item, durability, maxDurability));
+            player.sendMessage(getDurabilityMessage(player, "ping.chat.message", item, durability, maxDurability));
         }
         if (style.equalsIgnoreCase("actionbar")) {
-            player.sendActionBar(getDurabilityMessage("ping.actionbar.message", item, durability, maxDurability));
+            player.sendActionBar(getDurabilityMessage(player, "ping.actionbar.message", item, durability, maxDurability));
         }
     }
 
-    private static Component getDurabilityMessage(String path, ItemStack item, float durability, float maxDurability) {
-        return Component.translatable("durability_ping." + path, insert("item_type", getItemName(item)), insert("item_durability", (int) Math.ceil(durability)), insert("item_max_durability", (int) maxDurability));
+    private static Component getDurabilityMessage(Player player, String path, ItemStack item, float durability, float maxDurability) {
+        Component translatable = Component.translatable("durability_ping." + path,
+                insert("item_type", getItemName(item)),
+                insert("item_durability", (int) Math.ceil(durability)),
+                insert("item_max_durability", (int) maxDurability));
+
+        String norm = player.getClientOption(ClientOption.LOCALE).replace('-', '_');
+        String[] parts = norm.split("_");
+        String language = parts[0].toLowerCase(java.util.Locale.ROOT);
+        String country = (parts.length > 1) ? parts[1] : "";
+        java.util.Locale locale = country.isEmpty() ? new java.util.Locale(language) : new java.util.Locale(language, country.toUpperCase(java.util.Locale.ROOT));
+        Component resolved = GlobalTranslator.render(translatable, locale);
+        return resolved == null ? translatable : resolved;
     }
 
     public static void pingPlayer(Player player, ItemStack item, float durability) {
