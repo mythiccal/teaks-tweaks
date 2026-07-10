@@ -10,6 +10,7 @@ import me.teakivy.teakstweaks.packs.armoredelytra.ArmoredElytra;
 import me.teakivy.teakstweaks.packs.back.Back;
 import me.teakivy.teakstweaks.packs.backtobed.BackToBed;
 import me.teakivy.teakstweaks.packs.batmembranes.BatMembranes;
+import me.teakivy.teakstweaks.packs.bettergoldendandelion.BetterGoldenDandelion;
 import me.teakivy.teakstweaks.packs.cauldronconcrete.CauldronConcrete;
 import me.teakivy.teakstweaks.packs.cauldroncopper.CauldronCopper;
 import me.teakivy.teakstweaks.packs.cauldronmud.CauldronMud;
@@ -27,6 +28,9 @@ import me.teakivy.teakstweaks.packs.disposal.Disposal;
 import me.teakivy.teakstweaks.packs.doubleshulkershells.DoubleShulkerShells;
 import me.teakivy.teakstweaks.packs.dragondrops.DragonDrops;
 import me.teakivy.teakstweaks.packs.durabilityping.DurabilityPing;
+import me.teakivy.teakstweaks.packs.easieraxolotlbreeding.EasierAxolotlBreeding;
+import me.teakivy.teakstweaks.packs.easiermending.EasierMending;
+import me.teakivy.teakstweaks.packs.easiernametags.EasierNametags;
 import me.teakivy.teakstweaks.packs.elevators.Elevators;
 import me.teakivy.teakstweaks.packs.fastleafdecay.FastLeafDecay;
 import me.teakivy.teakstweaks.packs.fixeditemframes.FixedItemFrames;
@@ -38,8 +42,8 @@ import me.teakivy.teakstweaks.packs.infestedvillagers.InfestedVillagers;
 import me.teakivy.teakstweaks.packs.instamine.InstaMine;
 import me.teakivy.teakstweaks.packs.invisibleitemframes.InvisibleItemFrames;
 import me.teakivy.teakstweaks.packs.itemaverages.ItemAverages;
-import me.teakivy.teakstweaks.packs.keepsmall.KeepSmall;
 import me.teakivy.teakstweaks.packs.killboats.KillBoats;
+import me.teakivy.teakstweaks.packs.lapislock.LapisLock;
 import me.teakivy.teakstweaks.packs.largerphantoms.LargerPhantoms;
 import me.teakivy.teakstweaks.packs.lecternreset.LecternReset;
 import me.teakivy.teakstweaks.packs.miniblocks.MiniBlocks;
@@ -91,6 +95,7 @@ public enum TTPack {
     BACK("back", Back.class),
     BACK_TO_BED("back-to-bed", BackToBed.class),
     BAT_MEMBRANES("bat-membranes", BatMembranes.class),
+    BETTER_GOLDEN_DANDELION("better-golden-dandelion", BetterGoldenDandelion.class),
     CAULDRON_CONCRETE("cauldron-concrete", CauldronConcrete.class),
     CAULDRON_COPPER("cauldron-copper", CauldronCopper.class),
     CAULDRON_MUD("cauldron-mud", CauldronMud.class),
@@ -108,6 +113,9 @@ public enum TTPack {
     DOUBLE_SHULKER_SHELLS("double-shulker-shells", DoubleShulkerShells.class),
     DRAGON_DROPS("dragon-drops", DragonDrops.class),
     DURABILITY_PING("durability-ping", DurabilityPing.class),
+    EASIER_AXOLOTL_BREEDING("easier-axolotl-breeding", EasierAxolotlBreeding.class),
+    EASIER_MENDING("easier-mending", EasierMending.class),
+    EASIER_NAMETAGS("easier-nametags", EasierNametags.class),
     ELEVATORS("elevators", Elevators.class),
     FAST_LEAF_DECAY("fast-leaf-decay", FastLeafDecay.class),
     FIXED_ITEM_FRAMES("fixed-item-frames", FixedItemFrames.class),
@@ -119,8 +127,8 @@ public enum TTPack {
     INSTA_MINE("insta-mine", InstaMine.class),
     INVISIBLE_ITEM_FRAMES("invisible-item-frames", InvisibleItemFrames.class),
     ITEM_AVERAGES("item-averages", ItemAverages.class),
-    KEEP_SMALL("keep-small", KeepSmall.class),
     KILL_BOATS("kill-boats", KillBoats.class),
+    LAPIS_LOCK("lapis-lock", LapisLock.class),
     LARGER_PHANTOMS("larger-phantoms", LargerPhantoms.class),
     LECTERN_RESET("lectern-reset", LecternReset.class),
     MINI_BLOCKS("mini-blocks", MiniBlocks.class),
